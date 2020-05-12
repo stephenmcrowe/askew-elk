@@ -1,11 +1,13 @@
 # cs61-lab3
 
- * Stephen Crowe, Shikhar Sinha
+ * Stephen Crowe, James Tanner, Shikhar Sinha, Xiaoyi Wu
  * Prof. Pierson
  * CS61: Databases
- * 27 April 2020
+ * 29 May 2020
 
-This is our lab 3 submission utilizing a node.js express server for the endpoints and a simple python client to access the api. See below for installation instructions.
+Short description
+
+Pictures
 
 ## Dev Setup
 
@@ -32,37 +34,13 @@ yarn --version
 
 To install on Windows, install from [nodejs.org](https://nodejs.org/en/) and [yarnpkg.com](https://classic.yarnpkg.com/en/).
 
-
-Client requirements
-
-* pipenv
-* python 3.8
-
-Alternatively, install requests and pyjwt
-
 ### Install dependencies
 
 Run the command `yarn` to install node modules.
-Run the command `pipenv install` to install python dependencies.
 
 ### Start the server
 
 `yarn start`
-
-### Start the client
-
-`pipenv run python client.py`
-
-Or, if your Python packages are installed locally, just `python client.py`.
-
-## Testing
-
-This repository is equipped with a sql script for initializing the MYSQL database with an Employees table. It also adds two users to the table for testing:
-
- * username = 'admin', password = 'admin'
- * username = 'user', password = 'user'
-
-Use these to login with the client.
 
 ## Acknowledgements
 

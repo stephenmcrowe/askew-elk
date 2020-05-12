@@ -8,7 +8,7 @@ import { tokenForUser } from '../utils/encrypt';
 */
 const signin = (req, res) => {
   // Handle error to give more information back to the user
-  if (req.user.error) {
+  if (req.user.error) { // req.user comes from passport
     res.status(req.user.status).send({
       error: req.user.error,
       response: null,

@@ -21,7 +21,7 @@ const jwtOptions = {
 // username + password authentication strategy
 const GET_PASSWORD = `
 SELECT BIN_TO_UUID(EmployeeId, true) as EmployeeId, Psswrd, IsAdmin, Salt
-FROM Employees 
+FROM Users 
 WHERE Username = ?`;
 const localLogin = new LocalStrategy(localOptions, (username, password, done) => {
   // Verify this email and password, call done with the user

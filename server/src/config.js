@@ -6,7 +6,7 @@ const config = {
       password: '9447c003', // your localhost password here'
       schema: 'heroku_a0126caf6ceeffc', // 'your localhost default schema here'
     },
-    port: 3036,
+    port: 3306,
   },
 };
 

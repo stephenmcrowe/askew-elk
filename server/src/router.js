@@ -3,6 +3,8 @@ import * as Employees from './controllers/employee_controller';
 import signin from './controllers/auth_controller';
 import { requireAuth, requireSignin } from './utils/passport';
 
+import * as Recipes from './controllers/recipes_controller';
+
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -19,5 +21,13 @@ router.route('/employees/:id')
   .get(requireAuth, Employees.getEmployee)
   .put(requireAuth, Employees.updateEmployee)
   .delete(requireAuth, Employees.deleteEmployee);
+
+
+router.route('/recipe/:id')
+  .get(Recipes.getRecipe);
+
+router.route('/recipes')
+  .get(Recipes.getRecipes)
+  .post(Recipes.addRecipe);
 
 export default router;

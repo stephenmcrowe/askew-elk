@@ -143,3 +143,6 @@ client/package-lock.json
 
 # MySql
 *.mwb.bak
+
+# VS 2019
+.vs/

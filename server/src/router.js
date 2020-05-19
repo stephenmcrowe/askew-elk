@@ -4,6 +4,8 @@ import signin from './controllers/auth_controller';
 import { requireAuth, requireSignin } from './utils/passport';
 
 import * as Recipes from './controllers/recipes_controller';
+import * as Users from './controllers/user_controller';
+import * as Histories from './controllers/history_controller';
 
 const router = Router();
 
@@ -28,6 +30,24 @@ router.route('/recipe/:id')
 
 router.route('/recipes')
   .get(Recipes.getRecipes)
-  .post(Recipes.addRecipe);
+    .post(Recipes.addRecipe);
+
+router.route('/user/:id')
+    .get(Users.getUser)
+    .put(Users.updateUser)
+    .delete(Users.deleteUser);
+
+router.route('/users')
+    .get(Users.getUsers);
+
+router.route('/history')
+    .get(Histories.getHistory)
+    .put(Histories.updateHistory)
+    .delete(Histories.deleteHistory);
+
+router.route('/histories')
+    .get(Histories.getHistories)
+    .post(Histories.createHistories);
+    
 
 export default router;

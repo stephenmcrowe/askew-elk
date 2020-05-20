@@ -17,9 +17,9 @@ export function comparePasswords(rawPassword, encrypted, salt) {
 /*
  * Given a uuid (str), return a JWT
  */
-export function tokenForUser(uuid) {
+export function tokenForUser(user) {
   const timestamp = new Date().getTime();
-  return jwt.encode({ uuid, iat: timestamp }, 'secret');
+  return jwt.encode({ user, iat: timestamp }, 'secret');
 }
 
 /*

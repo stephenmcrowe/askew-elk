@@ -26,8 +26,8 @@ router.route('/employees/:id')
 router.route('/recipe/:id')
   .get(Recipes.getRecipe);
 
-router.route('/recipes')
-  .get(Recipes.getRecipes)
-  .post(Recipes.addRecipe);
+// router.route('/recipes')
+//   .get(Recipes.getRecipes)
+//   .post(Recipes.addRecipe);
 
 export default router;

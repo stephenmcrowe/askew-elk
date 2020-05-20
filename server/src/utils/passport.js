@@ -4,7 +4,7 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { comparePasswords } from './encrypt';
-import db from '../db';
+import { cnfg, Database } from '../db';
 
 // options for local strategy, we'll use username (found in POST body)
 const localOptions = { usernameField: 'username' };
@@ -20,17 +20,18 @@ const jwtOptions = {
 
 // username + password authentication strategy
 const GET_PASSWORD = `
-SELECT BIN_TO_UUID(EmployeeId, true) as EmployeeId, Psswrd, IsAdmin, Salt
+SELECT userID, username, password, salt
 FROM Users 
-WHERE Username = ?`;
+WHERE username = ?`;
 const localLogin = new LocalStrategy(localOptions, (username, password, done) => {
   // Verify this email and password, call done with the user
   // if it is the correct email and password
+  const db = new Database(cnfg);
   db.query(GET_PASSWORD, username)
     .then((results) => {
       if (Array.isArray(results) && results.length) {
-        const encryptedPassword = results[0].Psswrd.toString();
-        const salt = results[0].Salt.toString();
+        const encryptedPassword = results[0].password.toString();
+        const salt = results[0].salt.toString();
         if (comparePasswords(password, encryptedPassword, salt)) {
           // Send the object to the req through req.user
           done(null, results[0]);
@@ -42,8 +43,10 @@ const localLogin = new LocalStrategy(localOptions, (username, password, done) =>
         // Array came back empty so no user found
         done(null, { status: 401, error: 'Username not found' });
       }
+      return db.close();
     })
     .catch((err) => {
+      db.close();
       console.log(err);
       // MYSQL error
       done(err, false);
@@ -51,21 +54,24 @@ const localLogin = new LocalStrategy(localOptions, (username, password, done) =>
 });
 
 const CHECK_IF_EXISTS = `
-SELECT BIN_TO_UUID(EmployeeId, true) as EmployeeId, IsAdmin
-FROM Employees 
-WHERE EmployeeId = UUID_TO_BIN(?, true)`;
+SELECT userID, username
+FROM Users 
+WHERE userID = ?`;
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   // JWT passed checks. Just need to see if the user ID
   // in the payload exists in our database
-  db.query(CHECK_IF_EXISTS, payload.uuid)
+  const db = new Database(cnfg);
+  db.query(CHECK_IF_EXISTS, payload.user.userID)
     .then((results) => {
       if (Array.isArray(results) && results.length) {
         done(null, results[0]);
       } else {
         done(null, false);
       }
+      return db.close();
     })
     .catch((err) => {
+      db.close();
       console.log(err);
       done(err, false);
     });

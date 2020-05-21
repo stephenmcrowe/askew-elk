@@ -51,4 +51,8 @@ router.route('/histories')
     .post(Histories.createHistories);
     
 
+// router.route('/recipes')
+//   .get(Recipes.getRecipes)
+//   .post(Recipes.addRecipe);
+
 export default router;

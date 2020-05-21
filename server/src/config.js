@@ -9,7 +9,7 @@ const config = {
       host: 'localhost',
       user: 'root', // 'your localhost username here'
       password: 'password', // your localhost password here'
-      schema: 'nyc_inspections', // 'your localhost default schema here'
+      schema: 'heroku_a0126caf6ceeffc', // 'your localhost default schema here'
     },
     port: 3000,
   },

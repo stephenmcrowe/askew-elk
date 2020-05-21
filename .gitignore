@@ -140,3 +140,9 @@ npm-debug.log
 package-lock.json
 server/package-lock.json
 client/package-lock.json
+
+# MySql
+*.mwb.bak
+
+# VS 2019
+.vs/

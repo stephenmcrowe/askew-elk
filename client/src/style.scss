@@ -1,7 +1,19 @@
-body, html {
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+
+html {
     font-family: "Roboto", sans-serif;
-    background: linear-gradient(to bottom, #87e0fd 0%,#53cbf1 40%,#05abe0 100%);
-    height: 100%;
+    background: linear-gradient(to right bottom, #feffff 0%,#FDB74F 30%,#FF8A00 100%);
+    overflow-x: hidden;
+    // height: 100vh;
+  }
+
+  body {
+    background-color: transparent;
+    margin: 0px;
+    width: inherit;
+    overflow-x: hidden;
   }
 
   .logo {
@@ -14,4 +26,100 @@ body, html {
 
   .active {
     color: pink;
+  }
+
+  .screen-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .buttons-container {
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    // background-color: blue;
+    margin-bottom: 2vh;
+  }
+
+  .main-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: 93vh;
+    // background-color: brown;
+  }
+
+  .main-container-left {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 50%;
+    height: 100%;
+    // background-color: teal;
+  }
+  
+  .main-container-left-row1 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    width: 100%;
+    // background-color: red;
+  }
+
+  .main-container-left-row2 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-left: 3vw;
+    width: 100%;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.2vw;
+    // background-color: orange;
+  }
+
+  .main-container-left-row3 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    // background-color: yellow;
+  }
+
+  .main-container-right {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    width: 50%;
+    height: 100%;
+    // background-color: blue;
+  }
+
+  #logoPic, #food2Pic, #food1Pic {
+    transform: scale(0.75)
+  }
+
+  #food1Pic {
+    // margin-top: -4vw;
+    // margin-left: -4.1vw;
+  }
+
+  #food2Pic {
+    // margin-bottom: -1vw;
   }

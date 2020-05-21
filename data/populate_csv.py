@@ -102,6 +102,7 @@ for recipe in parsed:
 
         # ingredients
         for ingredient in recipe.get('ingredients'):
+            ingredient = ingredient.lower()
             if ingredient in ingredient_dict:
                 recipe_to_ingredient_writer.writerow([recipe_id, ingredient_dict.get(ingredient)])
             else:

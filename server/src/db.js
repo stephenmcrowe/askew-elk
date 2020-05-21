@@ -4,7 +4,7 @@ import config from './config';
 // Promisify the mysql connection
 // https://codeburst.io/node-js-mysql-and-promises-4c3be599909b
 
-class Database {
+export class Database {
   constructor(cnfg) {
     this.connection = mysql.createConnection(cnfg);
   }
@@ -37,16 +37,10 @@ class Database {
   }
 }
 
-const cnfg = {
+export const cnfg = {
   host: config.database.host,
   user: config.database.user,
   password: config.database.password,
   database: config.database.schema,
   dateStrings: 'date',
 };
-
-const db = new Database(cnfg);
-// Test connection
-db.connect().catch((err) => { throw err; });
-
-export default db;

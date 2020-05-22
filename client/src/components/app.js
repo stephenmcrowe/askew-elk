@@ -10,6 +10,7 @@ import {
 import HomePage from './homepage';
 import Signin from './signin';
 import Signup from './signup';
+import UserPage from './userpage';
 
 
 const FallBack = (props) => {
@@ -24,6 +25,7 @@ const App = (props) => {
           <Route exact path="/" component={HomePage} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
+          <Route exact path="/userpage" component={UserPage} />
           {/* <Route path="/about" component={About} />
           <Route exact path="/test/:id" component={Test} /> */}
           <Route component={FallBack} />

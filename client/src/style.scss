@@ -19,7 +19,7 @@ html {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    height: 100%;
+    height: 100vh;
   }
 
   .buttons-container {
@@ -140,5 +140,59 @@ html {
     width: 100px;
     height: 30px;
     font-size: 14px;
+  }
+}
+
+// USER PAGE
+
+.userpage {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.sidebar-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  width: 20%;
+  height: 100%;
+  background-color: #750303;
+  
+  #logoSideBar {
+    padding-bottom: 20vh;
+    transform: scale(0.9);
+  }
+
+  a { // Navlink styling
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 10%;
+    justify-content: flex-end;
+    color: transparent;
+  }
+
+  button {
+    width: 90%;
+    height: 100%;
+    background-color: transparent;
+    color: white;
+    border: white;
+    font-family: 'Lato', sans-serif;
+    font-size: 2vw;
+    text-align: left;
+    transition-duration: .5s;
+  }
+
+  button:hover {
+    font-size: 2.5vw;
+    text-decoration: underline;
   }
 }

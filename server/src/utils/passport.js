@@ -56,12 +56,12 @@ const localLogin = new LocalStrategy(localOptions, (username, password, done) =>
 const CHECK_IF_EXISTS = `
 SELECT userID, username
 FROM Users 
-WHERE userID = ?`;
+WHERE username = ?`;
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   // JWT passed checks. Just need to see if the user ID
   // in the payload exists in our database
   const db = new Database(cnfg);
-  db.query(CHECK_IF_EXISTS, payload.user.userID)
+  db.query(CHECK_IF_EXISTS, payload.username)
     .then((results) => {
       if (Array.isArray(results) && results.length) {
         done(null, results[0]);

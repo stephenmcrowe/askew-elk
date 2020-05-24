@@ -24,8 +24,19 @@ export const getRatings = (req, res) => {
 const ADD_RATING =
 `INSERT INTO rates (RecipeID, UserID, Rating)
 VALUES(?,?,?)`;
+
+const UPDATE_NUMBER_OF_RATINGS = 
+`UPDATE recipes WHERE RecipeID = ?
+SET NumberOfRatings = (SELECT COUNT(*) FROM rates WHERE RecipeID = ?) + 1`
+
+const UPDATE_AVERAGE_RATING
+`UPDATE recipes WHERE RecipeID = ?
+SET Rating = (SELECT SUM(Rating) FROM rates WHERE RecipeID = ?) /
+(SELECT NumberOfRatings FROM recipes WHERE RecipeID = ?)  `;
+
+
 export const addRating = (req, res) => {
-    db.query(ADD_RATING, [req.params.id. req.user.userID, req.params.rating])
+    db.query(ADD_RATING, [req.body.RecipeID. req.user.userID, req.body.rating])
     .then((result) => {
         res.status(200).json({error: null, response: result });
     })

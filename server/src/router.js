@@ -27,7 +27,8 @@ router.route('/employees/:id')
 
 
 router.route('/recipe/:id')
-  .get(Recipes.getRecipe);
+  .get(Recipes.getRecipe)
+  .delete(requireAuth, Recipes.deleteRecipe);
 
 router.route('/recipes')
   .get(Recipes.getRecipes)

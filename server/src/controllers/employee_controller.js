@@ -21,9 +21,9 @@ const INSERT = 'INSERT INTO Employees SET ?';
 const SELECT_NEW_UUID = 'SELECT UUID()';
 export const createEmployee = (req, res) => {
   // Cannot create an employee unless admin
-  if (req.user && !req.user.IsAdmin) {
-    return res.status(403).json({ error: 'Unauthorized', response: null });
-  }
+  // if (req.user && !req.user.IsAdmin) {
+  //   return res.status(403).json({ error: 'Unauthorized', response: null });
+  // }
 
   // Data massaging for MYSQL
   const hiredate = req.body.HireDate ? new Date(req.body.HireDate) : new Date();

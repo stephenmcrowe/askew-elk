@@ -1,10 +1,10 @@
 import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
-const SELECT_BY_RECIPE_AND_USER = 'SELECT DateOfEntry, Notes FROM history WHERE RecipeID = ? AND UserID = ?';
+const SELECT_BY_RECIPE_AND_USER = 'SELECT Notes FROM history WHERE RecipeID = ? AND UserID = ? AND DateOfEntry = ?';
 export const getHistory = (req, res) => {
   const db = new Database(cnfg);
-  db.query(SELECT_BY_RECIPE_AND_USER, [req.params.id, req.user.userID])
+  db.query(SELECT_BY_RECIPE_AND_USER, [req.params.id, req.user.userID, req.body.DateOfEntry])
     .then((result) => {
       res.status(200).json({ error: null, response: result });
       return db.close();

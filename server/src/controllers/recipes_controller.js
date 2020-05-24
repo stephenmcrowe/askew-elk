@@ -1,5 +1,5 @@
 import mysql from 'mysql';
-import db from '../db';
+import { Database, cnfg } from '../db';
 
 const WHERE_ID = 'WHERE RecipeID = ?';
 const SELECT_ONE = `
@@ -8,18 +8,19 @@ FROM recipes
 `;
 const SELECT_BY_ID = `${SELECT_ONE} ${WHERE_ID}`;
 export const getRecipe = (req, res) => {
-    // console.log(req.params.id);
-    db.query(SELECT_BY_ID, req.params.id)
-    .then((result) => {
-      console.log(result);
-      res.status(200).json({ error: null, response: result });
-
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err.sqlMessage, response: null });
-    })
-    ;
+  // console.log(req.params.id);
+  const db = new Database(cnfg);
+  db.query(SELECT_BY_ID, req.params.id)
+  .then((result) => {
+    console.log(result);
+    res.status(200).json({ error: null, response: result });
+    return db.close();
+  })
+  .catch((err) => {
+    db.close();
+    console.log(err);
+    res.status(500).json({ error: err.sqlMessage, response: null });
+  });
 };
 
  const SELECT_ALL =  
@@ -28,40 +29,44 @@ export const getRecipe = (req, res) => {
  const SELECT_WHERE = `${SELECT_ALL}
  WHERE ?`;
  export const getRecipes = (req, res) => {
-     let query = [];
+  let query = [];
 
-     // Parse in the query entries
-     Object.entries(req.query).forEach(([k, v]) => {
-         if (k === 'RecipeName' || k === 'RecipeAuthor') {
-             query.push(`${k} LIKE '%${v}%'`);
+  // Parse in the query entries
+  Object.entries(req.query).forEach(([k, v]) => {
+    if (k === 'RecipeName' || k === 'RecipeAuthor') {
+        query.push(`${k} LIKE '%${v}%'`);
+    } else {
+        query.push(`${k} = '${v}'`);
+    }
+  });
 
-         } else {
-             query.push(`${k} = '${v}'`);
-         }
-     });
-  
-     // admin wants everything without query params
-     if (query.length === 0) {
-       db.query(SELECT_ALL)
-         .then((result) => {
-           res.status(200).json({ error: null, response: result });
-         })
-         .catch((err) => {
-           console.log(err);
-           res.status(500).json({ error: err.sqlMessage, response: null });
-         });
-     } else {
-       query = mysql.raw(query.join(' AND '));
-       db.query(SELECT_WHERE, query)
-         .then((result) => {
-           res.status(200).json({ error: null, response: result });
-         })
-         .catch((err) => {
-           console.log(err);
-           res.status(500).json({ error: err.sqlMessage, response: null });
-         });
-     }
- };
+  // admin wants everything without query params
+  const db = new Database(cnfg);   
+  if (query.length === 0) {
+    db.query(SELECT_ALL)
+      .then((result) => {
+        res.status(200).json({ error: null, response: result });
+        return db.close();
+      })
+      .catch((err) => {
+        db.close();
+        console.log(err);
+        res.status(500).json({ error: err.sqlMessage, response: null });
+      });
+  } else {
+    query = mysql.raw(query.join(' AND '));
+    db.query(SELECT_WHERE, query)
+      .then((result) => {
+        res.status(200).json({ error: null, response: result });
+        return db.close();
+      })
+      .catch((err) => {
+        db.close();
+        console.log(err);
+        res.status(500).json({ error: err.sqlMessage, response: null });
+      });
+  }
+};
 
 
 // need transaction eventually
@@ -86,147 +91,135 @@ const ADD_RECIPE_JOIN_CATEGORY = `INSERT INTO recipetocategory VALUES (?, ?)`;
 
 export const addRecipe = (req, res) => {
     
-    let insertRecipe = [];
-    // console.log(req.body.RecipeName);
-    insertRecipe.push(`${(req.body.RecipeName)}`);
-    // insertRecipe.push(req.user.UserID)
+  let insertRecipe = [];
+  insertRecipe.push(`${(req.body.RecipeName)}`);
 
-    if (req.body.hasOwnProperty('Description')) {
-        insertRecipe.push(req.body.Description);
-    } else {
-        insertRecipe.push(mysql.raw(`NULL`));
-    }
-    insertRecipe.push(mysql.raw("NOW()"));
+  if (req.body.hasOwnProperty('Description')) {
+      insertRecipe.push(req.body.Description);
+  } else {
+      insertRecipe.push(mysql.raw(`NULL`));
+  }
+  insertRecipe.push(mysql.raw("NOW()"));
 
-    // console.log(insertRecipe);
-    db.query(ADD_RECIPE, insertRecipe)
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({ error: err.sqlMessage, response: null });
-      });
-
-    // build the directions list
-    //{
-    //  RecipeName:""
-    //  Description:""
-    //  Directions:{#, text},{#, text}}
-    //  Ingredients:["","",""]
-    //  Category:["","",""]
-    //}
-    
-    let directions = []
-    Object.entries(req.body.Directions).forEach(([k, v]) => {
-        directions.push(`(${LAST_INSERT_ID},${k},"${v}")`)
-    });
-    directions = mysql.raw(directions.join(', '));
-    
-    db.query(ADD_DIRECTIONS, directions)
+  const db = new Database(cnfg);
+  db.query(ADD_RECIPE, insertRecipe)
     .catch((err) => {
       console.log(err);
       res.status(500).json({ error: err.sqlMessage, response: null });
     });
 
-    let recipe_id = 0;
-    db.query(GET_LAST_INSERT_ID).then((result) => {
-
-        console.log(result);
-        recipe_id = result[0].ID;
+  // build the directions list
+  //{
+  //  RecipeName:""
+  //  Description:""
+  //  Directions:{#, text},{#, text}}
+  //  Ingredients:["","",""]
+  //  Category:["","",""]
+  //}
+  
+  let directions = []
+  Object.entries(req.body.Directions).forEach(([k, v]) => {
+      directions.push(`(${LAST_INSERT_ID},${k},"${v}")`)
+  });
+  directions = mysql.raw(directions.join(', '));
+  
+  db.query(ADD_DIRECTIONS, directions)
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err.sqlMessage, response: null });
     });
 
-    for (let i = 0; i < req.body.Ingredients.length; i++) {
-      console.log(req.body.Ingredients[i]);
-      db.query(CHECK_INGREDIENT, req.body.Ingredients[i])
-      .then((result) => {
-        // console.log(ingredientName);
-        // console.log(result);
-          if (result.length > 0) {
-              // ingredient is present
-              db.query(ADD_RECIPE_JOIN_INGREDIENT, [recipe_id, result[0].IngredientID]).catch((err) => {
-                  console.log(err);
-                  // res.status(500).json({ error: err.sqlMessage, response: null });
-              });
-          } else {
-              // two inserts
-              db.query(ADD_INGREDIENT, req.body.Ingredients[i]).catch((err) => {
-                  console.log(err);
-                  // res.status(500).json({ error: err.sqlMessage, response: null });
-              });
-              db.query(ADD_RECIPE_JOIN_INGREDIENT, [recipe_id, mysql.raw(LAST_INSERT_ID)]).catch((err) => {
-                  console.log(err);
-                  // res.status(500).json({ error: err.sqlMessage, response: null });
-              });
-          }
+  let recipe_id = 0;
+  db.query(GET_LAST_INSERT_ID)
+    .then((result) => {
+      console.log(result);
+      recipe_id = result[0].ID;
+    });
 
-        // res.status(200).json({ error: null, response: result });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({ error: err.sqlMessage, response: null });
-      });
+  for (let i = 0; i < req.body.Ingredients.length; i++) {
+    console.log(req.body.Ingredients[i]);
+    db.query(CHECK_INGREDIENT, req.body.Ingredients[i])
+    .then((result) => {
+      if (result.length > 0) {
+        // ingredient is present
+        db.query(ADD_RECIPE_JOIN_INGREDIENT, [recipe_id, result[0].IngredientID])
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        // two inserts
+        db.query(ADD_INGREDIENT, req.body.Ingredients[i])
+          .catch((err) => {
+            console.log(err);
+          });
+        db.query(ADD_RECIPE_JOIN_INGREDIENT, [recipe_id, mysql.raw(LAST_INSERT_ID)])
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err.sqlMessage, response: null });
+    });
 
-    }
+  }
 
-    for (let i = 0; i < req.body.Categories.length; i++) {
-      console.log(req.body.Categories[i]);
-      db.query(CHECK_CATEGORY, req.body.Categories[i])
-      .then((result) => {
-        // console.log(ingredientName);
-        // console.log(result);
-          if (result.length > 0) {
-              // ingredient is present
-              db.query(ADD_RECIPE_JOIN_CATEGORY, [recipe_id, result[0].CategoryID]).catch((err) => {
-                  console.log(err);
-                  // res.status(500).json({ error: err.sqlMessage, response: null });
-              });
-          } else {
-              // two inserts
-              db.query(ADD_CATEGORY, req.body.Categories[i]).catch((err) => {
-                  console.log(err);
-                  // res.status(500).json({ error: err.sqlMessage, response: null });
-              });
-              db.query(ADD_RECIPE_JOIN_CATEGORY, [recipe_id, mysql.raw(LAST_INSERT_ID)]).catch((err) => {
-                  console.log(err);
-                  // res.status(500).json({ error: err.sqlMessage, response: null });
-              });
-          }
+  for (let i = 0; i < req.body.Categories.length; i++) {
+    console.log(req.body.Categories[i]);
+    db.query(CHECK_CATEGORY, req.body.Categories[i])
+    .then((result) => {
+      if (result.length > 0) {
+        // ingredient is present
+        db.query(ADD_RECIPE_JOIN_CATEGORY, [recipe_id, result[0].CategoryID])
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        // two inserts
+        db.query(ADD_CATEGORY, req.body.Categories[i])
+          .catch((err) => {
+            console.log(err);
+          });
+        db.query(ADD_RECIPE_JOIN_CATEGORY, [recipe_id, mysql.raw(LAST_INSERT_ID)])
+        .catch((err) => {
+          console.log(err);
+        });
+      }
+    })
+    .catch((err) => {
+      db.close();
+      console.log(err);
+      res.status(500).json({ error: err.sqlMessage, response: null });
+    });
+  }
 
-        // res.status(200).json({ error: null, response: result });
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({ error: err.sqlMessage, response: null });
-      });
-
-    }
-
-    // db.createTransaction(() => {
-    //   db.query(CONST_STR, payload)
-    //     .then()
-        
-    // })
-
-    res.status(200).json({ error: null, response:"Success!" });
-    // db.close(); // closing DB
-    
-    
-    //db.commit(function(err) {
-    //    if (err) {
-    //      return db.rollback(function() {
-    //        throw err;
-    //      });
-    //    }
+  res.status(200).json({ error: null, response:"Success!" });
+  // db.close(); // closing DB
+  
+  
+  //db.commit(function(err) {
+  //    if (err) {
+  //      return db.rollback(function() {
+  //        throw err;
+  //      });
+  //    }
 
 };
 
 const DELETE_RECIPE = `DELETE FROM RECIPES WHERE RecipeID = ? AND RecipeAuthor = ?`;
 export const deleteRecipe = (req, res) => {
-    console.log(req.user);
-    res.json(req.user);
-        // this will also delete directions
-    // db.query(DELETE_RECIPE, [req.params.id,  req.user.UserID]).catch((err) => {
-    //     // error here if no permissions
-    
-    // });
-
-
+  console.log(req.user);
+  const db = new Database(cnfg);
+  db.query(DELETE_RECIPE, [req.params.id, req.user.userID])
+    .then(() => {
+      res.status(200).json({ error: null, response: "Delete succeeded" });
+      return db.close();
+    })
+    .catch((err) => {
+      // error here if no permissions
+      db.close();
+      console.log(err);
+      res.status(500).json({ error: err.sqlMessage, response: null });
+  });
 };

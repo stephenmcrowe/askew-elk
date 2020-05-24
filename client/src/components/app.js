@@ -11,6 +11,7 @@ import HomePage from './homepage';
 import Signin from './signin';
 import Signup from './signup';
 import UserPage from './userpage';
+import DetailedRecipe from './detailedRecipe';
 
 
 const FallBack = (props) => {
@@ -26,6 +27,7 @@ const App = (props) => {
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/userpage" component={UserPage} />
+          <Route exact path="/userpage/recipe/:id" component={DetailedRecipe} />
           {/* <Route path="/about" component={About} />
           <Route exact path="/test/:id" component={Test} /> */}
           <Route component={FallBack} />

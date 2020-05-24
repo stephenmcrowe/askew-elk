@@ -19,7 +19,7 @@ html {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    height: 100vh;
+    height: 100%;
   }
 
   .buttons-container {
@@ -40,7 +40,7 @@ html {
     justify-content: center;
     align-items: center;
     width: 90%;
-    height: 93vh;
+    height: 93%;
     // background-color: brown;
   }
 
@@ -147,11 +147,12 @@ html {
 
 .userpage {
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: stretch;
   width: 100%;
+  height: 100vh;
 }
 
 .sidebar-container {
@@ -159,7 +160,8 @@ html {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  align-content: center;
+  align-content: flex-start;
+  position: fixed;
   width: 20%;
   height: 100%;
   background-color: #750303;
@@ -174,7 +176,7 @@ html {
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
-    height: 10%;
+    height: 10vh;
     justify-content: flex-end;
     color: transparent;
   }
@@ -194,5 +196,159 @@ html {
   button:hover {
     font-size: 2.5vw;
     text-decoration: underline;
+  }
+}
+
+.user-area {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 80%;
+  margin-left: 20%;
+}
+
+.searchBar {
+  height: 4vh;
+  width: 60%;
+  margin-top: 10vh;
+  margin-bottom: -7vh;
+
+  input {
+    width: 100%;
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.5vw;
+    // text-align: center;
+  }
+
+  input::placeholder {
+    padding-left: 5px;
+  }
+}
+
+.recipes-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: flex-start;
+  width: 80%;
+  height: 100%;
+  background-color: transparent;
+  margin-top: 10vh;
+  border-radius: 1em;
+
+}
+
+.recipe-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 30%;
+  min-height: 50vh;
+  perspective: 1000px;
+  border-radius: 1em;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+
+
+  #recipeLink {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+  }
+
+  #recipeRating {
+    width: 100%;
+  }
+
+  h2 {
+    text-align: center;
+    color: brown;
+    padding-top: 20%;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+  }
+
+  h3 {
+    width: 100%;
+    text-align: center;
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  h4 {
+    width: 100%;
+    align-self: flex-end;
+  }
+}
+
+.recipe-container-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 1em;
+}
+
+.recipe-container:hover .recipe-container-inner {
+  transform: rotateY(180deg);
+}
+
+.frontSide, .backSide {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 1em;
+  backface-visibility: hidden;
+  overflow: auto;
+}
+
+.backSide {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  // background-color: white;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+
+// DetailedRecipe
+#ingredients-directions {
+  display: flex;
+  flex-direction: row;
+
+  div {
+    flex: 1;
+    div {
+      margin: 10px 0px;
+    }
+  }
+}
+
+#categories {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+
+  span {
+    margin: 10px 8px;
   }
 }

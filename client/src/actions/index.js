@@ -11,18 +11,3 @@ export const ActionTypes = {
 
   ERROR_SET: 'ERROR_SET',
 };
-
-
-export function increment() {
-  return {
-    type: ActionTypes.INCREMENT,
-    payload: null,
-  };
-}
-
-export function decrement() {
-  return {
-    type: ActionTypes.DECREMENT,
-    payload: null,
-  };
-}

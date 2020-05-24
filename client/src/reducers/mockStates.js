@@ -7,14 +7,17 @@ export const userState = {
 export const recipeState = {
   all: [
     {
+      id: 4,
       recipeName: 'Mahi-Mahi in Tomato Olive Sauce',
       recipeAuthor: 'Anonymous',
       rating: 5.000,
       numberOfRatings: 1,
-      description: 'The Sicilian-style tomato sauce has tons of Mediterranean flavor, thanks to the orange peel, olives, and oregano.',
+      description: // 'The Sicilian-style tomato sauce has tons of Mediterranean flavor, thanks to the orange peel, olives, and oregano.',
+                   'Classic spoon bread is a savory pudding served as a side dish. In this dessert version, the slightly sweetened batter is baked in individual ramekins, then topped with strawberry preserves.',
       dateAdded: '2009-03-27 04:00:00',
     },
     {
+      id: 6,
       recipeName: 'The Best Blts',
       recipeAuthor: 'Anonymous',
       rating: 4.375,
@@ -24,6 +27,7 @@ export const recipeState = {
     },
   ],
   current: {
+    id: 4,
     recipeName: 'Mahi-Mahi in Tomato Olive Sauce',
     recipeAuthor: 'Anonymous',
     rating: 5.000,

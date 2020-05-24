@@ -1,52 +1,67 @@
 /* React imports */
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import logo from '../img/logo-sidebar.png';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 
 /* Custom imports */
+import logo from '../img/logo-sidebar.png';
 import Recipe from './recipe';
-
-// const TopBarSignOut = (props) => {
-//     return (
-//         <div className="buttons-container">
-//         <button type="submit" id="signOutButton">SIGN OUT</button>
-//       </div>
-//     );
-// };
-
-const SideBar = (props) => {
-  return (
-    <div className="sidebar-container">
-      <img src={logo} id="logoSideBar" alt="Logo" />
-      <NavLink to="/signup"> <button type="button" id="signUpButton">Browse</button></NavLink>
-      <NavLink to="/signin"><button type="button" id="signInButton">Your Recipes</button></NavLink>
-      <NavLink to="/signin"><button type="button" id="signInButton">Favorites</button></NavLink>
-      <NavLink to="/signin"><button type="button" id="signInButton">Saved Notes</button></NavLink>
-    </div>
-  );
-};
+import SearchBar from './searchbar';
+import { signoutUser } from '../actions/userApi';
 
 class UserPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      username: 'current username',
-    };
+    this.state = {};
   }
+
+  sideBar = () => {
+    return (
+      <div className="sidebar-container">
+        <img src={logo} id="logoSideBar" alt="Logo" />
+        <NavLink to="/signup"> <button type="button" id="signUpButton">Browse</button></NavLink>
+        <NavLink to="/signin"><button type="button" id="signInButton">Your Recipes</button></NavLink>
+        <NavLink to="/signin"><button type="button" id="signInButton">Favorites</button></NavLink>
+        <NavLink to="/signin"><button type="button" id="signInButton">Saved Notes</button></NavLink>
+      </div>
+    );
+  }
+
+  handleSignOut = () => {
+    this.props.signoutUser()
+      .then(() => { this.props.history.push('/'); });
+  }
+
+  topBarSignOut = () => {
+    return (
+      <div className="buttons-container">
+        <button
+          type="button"
+          onClick={this.handleSignOut}
+          id="signOutButton"
+        >SIGN OUT
+        </button>
+      </div>
+    );
+  };
 
   render() {
     return (
       <div className="userpage">
-        <SideBar />
+        {this.sideBar()}
         <div className="user-area">
+          {this.topBarSignOut()}
+          <SearchBar />
           <div className="recipes-container">
-            <div className="recipe-container">
-              Hello
-              {this.state.username}
-              <Recipe />
-            </div>
+            {/* <div className="recipe-container"> */}
+            <Recipe />
+            <Recipe />
+            <Recipe />
+            <Recipe />
+            {/* </div> */}
           </div>
         </div>
       </div>
@@ -55,4 +70,4 @@ class UserPage extends Component {
 }
 
 
-export default UserPage;
+export default withRouter(connect(null, { signoutUser })(UserPage));

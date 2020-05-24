@@ -59,10 +59,12 @@ export function signinUser(user) {
 
 // deletes token from localstorage
 // and deauths
-export function signoutUser(history) {
+export function signoutUser() {
   return (dispatch) => {
-    localStorage.removeItem('token');
-    dispatch({ type: ActionTypes.DEAUTH_USER });
-    history.push('/');
+    return new Promise((resolve, reject) => {
+      localStorage.removeItem('token');
+      dispatch({ type: ActionTypes.DEAUTH_USER });
+      resolve();
+    });
   };
 }

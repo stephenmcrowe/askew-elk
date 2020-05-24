@@ -21,7 +21,7 @@ export class Database {
   createTransaction(callback) {
     return new Promise((resolve, reject) => {
       this.connection.createConnection(callback);
-    })
+    });
   }
 
   connect() {

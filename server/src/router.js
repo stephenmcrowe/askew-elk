@@ -25,32 +25,30 @@ router.route('/employees/:id')
   .put(requireAuth, Employees.updateEmployee)
   .delete(requireAuth, Employees.deleteEmployee);
 
-
 router.route('/recipe/:id')
   .get(Recipes.getRecipe)
   .delete(requireAuth, Recipes.deleteRecipe);
 
 router.route('/recipes')
   .get(Recipes.getRecipes)
-    .post(Recipes.addRecipe);
+  .post(Recipes.addRecipe);
 
 router.route('/user/:id')
-    .get(Users.getUser)
-    .put(Users.updateUser)
-    .delete(Users.deleteUser);
+  .get(Users.getUser)
+  .put(requireAuth, Users.updateUser)
+  .delete(requireAuth, Users.deleteUser);
 
 router.route('/users')
-    .get(Users.getUsers);
+  .get(Users.getUsers);
 
 router.route('/history')
-    .get(Histories.getHistory)
-    .put(Histories.updateHistory)
-    .delete(Histories.deleteHistory);
+  .get(Histories.getHistory)
+  .put(Histories.updateHistory)
+  .delete(Histories.deleteHistory);
 
 router.route('/histories')
-    .get(Histories.getHistories)
-    .post(Histories.createHistories);
-    
+  .get(Histories.getHistories)
+  .post(Histories.createHistories);
 
 // router.route('/recipes')
 //   .get(Recipes.getRecipes)

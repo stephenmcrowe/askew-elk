@@ -40,7 +40,7 @@ export const getRecipes = (req, res) => {
 
   // Parse in the query entries
   Object.entries(req.query).forEach(([k, v]) => {
-    if (k === 'RecipeName' || k === 'RecipeAuthor') {
+    if (k === 'RecipeName') {
       query.push(`${k} LIKE '%${v}%'`);
     } else {
       query.push(`${k} = '${v}'`);

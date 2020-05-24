@@ -41,14 +41,14 @@ router.route('/user/:id')
 router.route('/users')
   .get(Users.getUsers);
 
-router.route('/history')
+router.route('/history/:id')
   .get(Histories.getHistory)
-  .put(Histories.updateHistory)
-  .delete(Histories.deleteHistory);
+  .put(requireAuth, Histories.updateHistory)
+  .delete(requireAuth, Histories.deleteHistory)
+  .post(Histories.createHistory);
 
 router.route('/histories')
-  .get(Histories.getHistories)
-  .post(Histories.createHistories);
+  .get(Histories.getHistories);
 
 // router.route('/recipes')
 //   .get(Recipes.getRecipes)

@@ -46,9 +46,9 @@ export function getRecipes(params) {
   };
 }
 
-export function createRecipe(recipe, history) {
+export function createRecipe(recipe) {
   /*
-   * Params should look like:
+   * recipe should look like:
    * {
    *    recipeName: str
    *    recipeAuthor: username (str)
@@ -57,13 +57,11 @@ export function createRecipe(recipe, history) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/recipes`;
-      console.log(`GET: ${url}`);
+      console.log(`POST: ${url}`);
       axios.post(url, recipe)
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.CREATE_RECIPE, payload: response });
           resolve(response);
-          history.push('/userpage');
         })
         .catch((error) => {
           dispatch({ type: ActionTypes.ERROR_SET, error });

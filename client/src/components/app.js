@@ -25,15 +25,13 @@ const App = (props) => {
     <div className="screen-container">
       <Router>
         <Switch>
-          <Route exact path="/" component={UserPage} />
+          <Route exact path="/homepage" component={HomePage} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
-          <Route exact path="/homepage" component={HomePage} />
           <PrivateRoute exact path="/recipe/create" component={NewRecipe} />
           <PrivateRoute exact path="/recipe/:id" component={DetailedRecipe} />
           <PrivateRoute exact path="/savednotes" component={SavedNotes} />
-          {/* <Route path="/about" component={About} />
-          <Route exact path="/test/:id" component={Test} /> */}
+          <PrivateRoute path="/" component={UserPage} />
           <Route component={FallBack} />
         </Switch>
       </Router>

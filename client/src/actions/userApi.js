@@ -61,7 +61,7 @@ export function signinUser(user) {
 // and deauths
 export function signoutUser() {
   return (dispatch) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       localStorage.removeItem('token');
       dispatch({ type: ActionTypes.DEAUTH_USER });
       resolve();

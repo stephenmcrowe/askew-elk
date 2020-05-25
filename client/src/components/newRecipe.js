@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import PulseLoader from 'react-spinners/PulseLoader';
 import { createRecipe } from '../actions/recipeApi';
 
 class NewRecipe extends Component {
@@ -8,63 +9,89 @@ class NewRecipe extends Component {
     super(props);
 
     this.state = {
-      recipeName: '',
-      recipeAuthor: '',
-      rating: '',
-      description: '',
-      dateAdded: '',
+      RecipeName: '',
+      RecipeAuthor: '',
+      Rating: '',
+      Description: '',
       category: '',
-      categories: [],
-      ingredients: [],
-      instructions: [],
+      Categories: [],
+      ingredient: '',
+      Ingredients: [],
+      instruction: '',
+      Instructions: [],
+      submitting: true,
     };
   }
 
   onInputRecipeNameChange = (event) => {
     console.log(event.target.value);
-    this.setState({ recipeName: event.target.value });
+    this.setState({ RecipeName: event.target.value });
   }
 
   onInputRecipeAuthorChange = (event) => {
     console.log(event.target.value);
-    this.setState({ recipeAuthor: event.target.value });
+    this.setState({ RecipeAuthor: event.target.value });
   }
 
   onInputRatingChange = (event) => {
     console.log(event.target.value);
-    this.setState({ rating: event.target.value });
+    this.setState({ Rating: event.target.value });
   }
 
   onInputDescriptionChange = (event) => {
     console.log(event.target.value);
-    this.setState({ description: event.target.value });
+    this.setState({ Description: event.target.value });
   }
 
-  onInputCategoriesChange = (event) => {
+  onInputCategoryChange = (event) => {
     console.log(event.target.value);
     this.setState({ category: event.target.value });
   }
 
   onSubmitCategory = (event) => {
-    const { categories, category } = this.state;
-    categories.push(category);
-    this.setState({ categories, category: '' });
+    const { Categories, category } = this.state;
+    Categories.push(category);
+    this.setState({ Categories, category: '' });
   }
 
-  onInputIngredientsChange = (event) => {
+  onInputIngredientChange = (event) => {
     console.log(event.target.value);
-    this.setState({ ingredients: event.target.value });
+    this.setState({ ingredient: event.target.value });
   }
 
-  onInputInstructionsChange = (event) => {
+  onSubmitIngredient = () => {
+    const { Ingredients, ingredient } = this.state;
+    Ingredients.push(ingredient);
+    this.setState({ Ingredients, ingredient: '' });
+  }
+
+  onInputInstructionChange = (event) => {
     console.log(event.target.value);
-    this.setState({ instructions: event.target.value });
+    this.setState({ instruction: event.target.value });
+  }
+
+  onSubmitInstruction = () => {
+    const { Instructions, instruction } = this.state;
+    Instructions.push(instruction);
+    this.setState({ Instructions, instruction: '' });
   }
 
   handleSubmit = (event) => {
-    console.log('submitting!');
-    this.props.createRecipe(this.state, this.props.history);
     event.preventDefault();
+    console.log('submitting!');
+    this.setState({ submitting: true });
+    this.props.createRecipe(this.state)
+      .then((result) => {
+        console.log(result);
+        this.props.navigation.push(`/recipe/${result}`);
+      })
+      .catch((error) => {
+        this.setState({ submitting: false });
+      });
+  }
+
+  renderLoading = () => {
+    return (<PulseLoader />);
   }
 
   log = () => {
@@ -84,7 +111,7 @@ class NewRecipe extends Component {
               type="text"
               name="recipeName"
               onChange={this.onInputRecipeNameChange}
-              value={this.state.recipeName}
+              value={this.state.RecipeName}
             />
           </label>
           Recipe Author
@@ -93,7 +120,7 @@ class NewRecipe extends Component {
               type="text"
               name="recipeAuthor"
               onChange={this.onInputRecipeAuthorChange}
-              value={this.state.recipeAuthor}
+              value={this.state.RecipeAuthor}
             />
           </label>
           Recipe Rating
@@ -102,7 +129,7 @@ class NewRecipe extends Component {
               type="text"
               name="rating"
               onChange={this.onInputRatingChange}
-              value={this.state.rating}
+              value={this.state.Rating}
             />
           </label>
           Recipe Description
@@ -111,7 +138,7 @@ class NewRecipe extends Component {
               type="text"
               name="description"
               onChange={this.onInputDescriptionChange}
-              value={this.state.description}
+              value={this.state.Description}
             />
           </label>
           Recipe Categories
@@ -119,8 +146,8 @@ class NewRecipe extends Component {
             <input
               type="text"
               name="categories"
-              onChange={this.onInputCategoriesChange}
-              value={this.state.category}
+              onChange={this.onInputCategoryChange}
+              value={this.state.Category}
             />
             <button
               type="button"
@@ -135,18 +162,32 @@ class NewRecipe extends Component {
             <input
               type="text"
               name="ingredients"
-              onChange={this.onInputIngredientsChange}
-              value={this.state.ingredients}
+              onChange={this.onInputIngredientChange}
+              value={this.state.ingredient}
             />
+            <button
+              type="button"
+              onClick={this.onSubmitIngredient}
+              id="ingredientSubmitButton"
+            >
+              +
+            </button>
           </label>
           Recipe Instructions
           <label htmlFor="recipeInstructions">
             <input
               type="text"
               name="instructions"
-              onChange={this.onInputInstructionsChange}
-              value={this.state.instructions}
+              onChange={this.onInputInstructionChange}
+              value={this.state.instruction}
             />
+            <button
+              type="button"
+              onClick={this.onSubmitInstruction}
+              id="instructionSubmitButton"
+            >
+              +
+            </button>
           </label>
           <button
             type="submit"
@@ -157,6 +198,7 @@ class NewRecipe extends Component {
           </button>
         </form>
         <button type="button" onClick={this.log}>Log</button>
+        {this.renderLoading()}
       </div>
     );
   }

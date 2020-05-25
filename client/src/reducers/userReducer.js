@@ -1,7 +1,6 @@
 import { ActionTypes } from '../actions';
 
 const initialState = {
-  userID: '',
   username: '',
 };
 

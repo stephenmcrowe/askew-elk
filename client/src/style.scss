@@ -24,6 +24,7 @@ html {
     padding: 15px;
     font-family: 'Lato', 'san-serif';
     font-size: 1vw;
+    z-index: 10;
   }
 
   .screen-container {
@@ -106,6 +107,7 @@ html {
     align-content: center;
     width: 50%;
     height: 100%;
+    z-index: 1;
     // background-color: blue;
   }
 

@@ -7,14 +7,6 @@ import pic1 from '../img/mainpage_pic1.png';
 import pic2 from '../img/mainpage_pic2.png';
 import logo from '../img/title_logo.png';
 
-// const TopBarSignOut = (props) => {
-//     return (
-//         <div className="buttons-container">
-//         <button type="submit" id="signOutButton">SIGN OUT</button>
-//       </div>
-//     );
-// };
-
 const TopBarSignIn = (props) => {
   return (
     <div className="buttons-container">

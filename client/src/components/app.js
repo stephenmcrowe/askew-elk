@@ -7,12 +7,14 @@ import {
 } from 'react-router-dom';
 
 /* Custom imports */
+import PrivateRoute from './privateRoute';
 import HomePage from './homepage';
 import Signin from './signin';
 import Signup from './signup';
 import UserPage from './userpage';
 import DetailedRecipe from './detailedRecipe';
-
+import NewRecipe from './newRecipe';
+import SavedNotes from './savednotes';
 
 const FallBack = (props) => {
   return <div>URL Not Found</div>;
@@ -23,11 +25,13 @@ const App = (props) => {
     <div className="screen-container">
       <Router>
         <Switch>
-          <Route exact path="/" component={HomePage} />
+          <Route exact path="/" component={UserPage} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
-          <Route exact path="/userpage" component={UserPage} />
-          <Route exact path="/userpage/recipe/:id" component={DetailedRecipe} />
+          <Route exact path="/homepage" component={HomePage} />
+          <PrivateRoute exact path="/recipe/create" component={NewRecipe} />
+          <PrivateRoute exact path="/recipe/:id" component={DetailedRecipe} />
+          <PrivateRoute exact path="/savednotes" component={SavedNotes} />
           {/* <Route path="/about" component={About} />
           <Route exact path="/test/:id" component={Test} /> */}
           <Route component={FallBack} />

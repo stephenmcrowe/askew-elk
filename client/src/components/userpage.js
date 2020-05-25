@@ -22,10 +22,10 @@ class UserPage extends Component {
     return (
       <div className="sidebar-container">
         <img src={logo} id="logoSideBar" alt="Logo" />
-        <NavLink to="/signup"> <button type="button" id="signUpButton">Browse</button></NavLink>
-        <NavLink to="/signin"><button type="button" id="signInButton">Your Recipes</button></NavLink>
-        <NavLink to="/signin"><button type="button" id="signInButton">Favorites</button></NavLink>
-        <NavLink to="/signin"><button type="button" id="signInButton">Saved Notes</button></NavLink>
+        <NavLink to="/userpage/browse"> <button type="button" id="browseButton">Browse</button></NavLink>
+        <NavLink to="/userpage/yourrecipes"><button type="button" id="yourRecipesButton">Your Recipes</button></NavLink>
+        <NavLink to="/userpage/favorites"><button type="button" id="favoritesButton">Favorites</button></NavLink>
+        <NavLink to="/userpage/savednotes"><button type="button" id="savedNotesButton">Saved Notes</button></NavLink>
       </div>
     );
   }

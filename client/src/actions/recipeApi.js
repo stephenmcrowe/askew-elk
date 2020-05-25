@@ -45,3 +45,30 @@ export function getRecipes(params) {
     });
   };
 }
+
+export function createRecipe(recipe, history) {
+  /*
+   * Params should look like:
+   * {
+   *    recipeName: str
+   *    recipeAuthor: username (str)
+   * }
+   */
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      const url = `${ROOT_URL}/recipes`;
+      console.log(`GET: ${url}`);
+      axios.post(url, recipe)
+        .then((resp) => {
+          const { response } = resp.data;
+          dispatch({ type: ActionTypes.CREATE_RECIPE, payload: response });
+          resolve(response);
+          history.push('/userpage');
+        })
+        .catch((error) => {
+          dispatch({ type: ActionTypes.ERROR_SET, error });
+          reject(error);
+        });
+    });
+  };
+}

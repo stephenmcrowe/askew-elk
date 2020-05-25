@@ -6,6 +6,8 @@ import { requireAuth, requireSignin } from './utils/passport';
 import * as Recipes from './controllers/recipes_controller';
 import * as Users from './controllers/user_controller';
 import * as Histories from './controllers/history_controller';
+import * as Favorites from './controllers/favorites_controller';
+import * as Directions from './controllers/directions_controller';
 
 const router = Router();
 
@@ -27,11 +29,14 @@ router.route('/employees/:id')
 
 router.route('/recipe/:id')
   .get(Recipes.getRecipe)
-  .delete(requireAuth, Recipes.deleteRecipe);
+  .delete(requireAuth, Recipes.deleteRecipe)
+  .put(requireAuth, Recipes.updateRecipe);
+
 
 router.route('/recipes')
   .get(Recipes.getRecipes)
-  .post(Recipes.addRecipe);
+  .post(requireAuth, Recipes.addRecipe);
+
 
 router.route('/user/:id')
   .get(Users.getUser)
@@ -42,13 +47,19 @@ router.route('/users')
   .get(Users.getUsers);
 
 router.route('/history/:id')
-  .get(Histories.getHistory)
+  .get(requireAuth, Histories.getHistory)
   .put(requireAuth, Histories.updateHistory)
   .delete(requireAuth, Histories.deleteHistory)
-  .post(Histories.createHistory);
+  .post(requireAuth, Histories.createHistory);
 
 router.route('/histories')
-  .get(Histories.getHistories);
+  .get(requireAuth, Histories.getHistories);
+
+router.route('/favorites')
+  .get(requireAuth, Favorites.getFavorites);
+
+router.route('/directions')
+  .put(requireAuth, Directions.updateDirection);
 
 // router.route('/recipes')
 //   .get(Recipes.getRecipes)

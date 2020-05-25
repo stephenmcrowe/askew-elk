@@ -2,7 +2,7 @@ import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
 const WHERE_ID = 'WHERE UserID = ?';
-const SELECT_ONE = 'SELECT UserName, SALT FROM users';
+const SELECT_ONE = 'SELECT UserName FROM users';
 const SELECT_BY_ID = `${SELECT_ONE} ${WHERE_ID}`;
 export const getUser = (req, res) => {
   const db = new Database(cnfg);
@@ -33,10 +33,10 @@ export const getUsers = (req, res) => {
     });
 };
 
-const UPDATE_USER = `UPDATE users SET UserName = ?, Password = ? ${WHERE_ID}`;
+const UPDATE_USER = `UPDATE users SET UserName = ? ${WHERE_ID}`;
 export const updateUser = (req, res) => {
   const db = new Database(cnfg);
-  db.query(UPDATE_USER, [req.body.UserName, req.body.Password, req.user.userID])
+  db.query(UPDATE_USER, [req.body.UserName, req.user.userID])
     .then(() => {
       res.status(200).json({ error: null, response: 'Update succeeded' });
       return db.close();

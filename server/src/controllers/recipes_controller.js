@@ -134,7 +134,7 @@ export const getRecipes = (req, res) => {
 // const ADD_RECIPE =
 // `INSERT INTO Recipes(RecipeName, RecipeAuthor, Description, DateAdded)
 // VALUES(?,?,?,?)`;
-const ADD_RECIPE = 'INSERT INTO Recipes(RecipeName, Description, DateAdded) VALUES(?,?,?)';
+const ADD_RECIPE = 'INSERT INTO Recipes(RecipeName,RecipeAuthor, Description, DateAdded) VALUES(?,?,?,?)';
 // VALUES (?,?,?),(?, ?, ?), (?, ?, ?);
 const ADD_DIRECTIONS = 'INSERT INTO Directions (recipeID, StepNumber, Direction) VALUES ? ';
 const LAST_INSERT_ID = 'last_insert_id()';
@@ -256,7 +256,10 @@ const ADD_RECIPE_JOIN_CATEGORY = 'INSERT INTO recipetocategory VALUES (?, ?)';
 
 export const addRecipe = (req, res) => {
   const insertRecipe = [];
+  console.log(req.user.userID);
+
   insertRecipe.push(`${(req.body.RecipeName)}`);
+  insertRecipe.push(`${(req.user.userID)}`);
 
   if ('Description' in req.body) {
     insertRecipe.push(req.body.Description);
@@ -377,3 +380,45 @@ export const deleteRecipe = (req, res) => {
       res.status(500).json({ error: err.sqlMessage, response: null });
     });
 };
+
+const UPDATE_BOTH = 'UPDATE RECIPES SET Description = ?, RecipeName = ? WHERE RecipeID = ? AND RecipeAuthor = ?';
+const UPDATE_NAME = 'UPDATE RECIPES SET RecipeName = ? WHERE RecipeID = ? AND RecipeAuthor = ?';
+const UPDATE_DESCRIPTION = 'UPDATE RECIPES SET Description = ? WHERE RecipeID = ? AND RecipeAuthor = ?';
+export const updateRecipe = (req, res) => {
+  const db = new Database(cnfg);
+  if ('Description' in req.body && 'RecipeName' in req.body) {
+    db.query(UPDATE_BOTH, [req.body.Description, req.body.RecipeName, mysql.raw(req.params.id), (req.user.userID)])
+      .then(() => {
+        res.status(200).json({ error: null, response: 'Update Succeeded' });
+        return db.close();
+      })
+      .catch((err) => {
+        db.close();
+        console.log(err);
+        res.status(500).json({ error: err.sqlMessage, response: null });
+      });
+  } else if ('RecipeName' in req.body) {
+    db.query(UPDATE_NAME, [req.body.RecipeName, mysql.raw(req.params.id), (req.user.userID)])
+      .then(() => {
+        res.status(200).json({ error: null, response: 'Update Succeeded' });
+        return db.close();
+      })
+      .catch((err) => {
+        db.close();
+        console.log(err);
+        res.status(500).json({ error: err.sqlMessage, response: null });
+      });
+  } else {
+    db.query(UPDATE_DESCRIPTION, [(req.body.Description), mysql.raw(req.params.id), (req.user.userID)])
+      .then(() => {
+        res.status(200).json({ error: null, response: 'Update Succeeded' });
+        return db.close();
+      })
+      .catch((err) => {
+        db.close();
+        console.log(err);
+        res.status(500).json({ error: err.sqlMessage, response: null });
+      });
+  }
+};
+

@@ -22,6 +22,7 @@ recipes_to_ingredient_fp = io.open('recipe_to_ingredient.csv', 'w', newline='', 
 directions_fp = io.open('directions.csv', 'w', newline='', encoding='utf-8')
 categories_fp = io.open('categories.csv', 'w', newline='', encoding='utf-8')
 recipe_to_category_fp = io.open('recipe_to_category.csv', 'w', newline='', encoding='utf-8')
+rates_fp = io.open('rates.csv', 'w', newline='', encoding='utf-8')
 
 # set up writers and write headers
 # delimeter = "|" quote_char = "$"
@@ -45,6 +46,9 @@ category_writer.writerow(["CategoryID", "CategoryName"])
 
 recipe_to_category_writer = csv.writer(recipe_to_category_fp, delimiter='|', quotechar='$', quoting=csv.QUOTE_NONNUMERIC)
 recipe_to_category_writer.writerow(["RecipeID", "CategoryID"])
+
+rates_writer = csv.writer(rates_fp, delimiter='|', quotechar='$', quoting=csv.QUOTE_NONNUMERIC)
+rates_writer.writerow(["RecipeID", "UserID", "Rating"])
 
 # vars for loop
 recipe_id = 1
@@ -127,6 +131,9 @@ for recipe in parsed:
                 recipe_to_category_writer.writerow([recipe_id, category_id])
                 category_id += 1
 
+        # rates
+        rates_writer.writerow([recipe_id, 131, rating])
+
         recipe_id += 1
 
 # close all the files
@@ -137,3 +144,4 @@ recipes_to_ingredient_fp.close()
 directions_fp.close()
 categories_fp.close()
 recipe_to_category_fp.close()
+rates_fp.close()

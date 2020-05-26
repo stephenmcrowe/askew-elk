@@ -2,62 +2,37 @@
 // import $ from 'jquery';
 import '../style.scss';
 import React from 'react';
-// import ReactDOM from 'react-dom';
 import {
-  BrowserRouter as Router, Route, NavLink, Switch,
+  BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import Counter from './counter';
-import Controls from './controls';
+
+/* Custom imports */
+import HomePage from './homepage';
+import Signin from './signin';
+import Signup from './signup';
+import UserPage from './userpage';
 
 
-// const $num = 0;
-
-const About = (props) => {
-  return <div> All there is to know about me </div>;
-};
-const Welcome = (props) => {
-  return <div>Welcome</div>;
-};
-const Test = (props) => {
-  return <div> ID: {props.match.params.id} </div>;
-};
 const FallBack = (props) => {
   return <div>URL Not Found</div>;
 };
 
 const App = (props) => {
   return (
-    <Router>
-      <div>
-        <Nav />
+    <div className="screen-container">
+      <Router>
         <Switch>
-          <Route exact path="/" component={Welcome} />
-          <Route path="/about" component={About} />
-          <Route exact path="/test/:id" component={Test} />
+          <Route exact path="/" component={HomePage} />
+          <Route exact path="/signin" component={Signin} />
+          <Route exact path="/signup" component={Signup} />
+          <Route exact path="/userpage" component={UserPage} />
+          {/* <Route path="/about" component={About} />
+          <Route exact path="/test/:id" component={Test} /> */}
           <Route component={FallBack} />
         </Switch>
-        {/* adding in the counter component */}
-        <Counter />
-        {/* adding in the button 'control' component */}
-        <Controls />
-      </div>
-    </Router>
-  );
-};
-
-const Nav = (props) => {
-  return (
-    <nav>
-      <ul>
-        <li><NavLink to="/" exact>Home</NavLink></li>
-        <li><NavLink to="/about">About</NavLink></li>
-        <li><NavLink to="/test/id1">test id1</NavLink></li>
-        <li><NavLink to="/test/id2">test id2</NavLink></li>
-      </ul>
-    </nav>
+      </Router>
+    </div>
   );
 };
 
 export default App;
-
-// ReactDOM.render(<App />, document.getElementById('main'));

@@ -18,6 +18,26 @@ export class Database {
     });
   }
 
+  createTransaction(callback) {
+    return new Promise((resolve, reject) => {
+      this.connection.beginTransaction((err) => {
+        if (err) { reject(err); }
+
+        return callback(this)
+          .then((result) => {
+            this.connection.commit();
+            this.connection.end();
+            resolve(result);
+          })
+          .catch((error) => {
+            this.connection.rollback();
+            this.connection.end();
+            reject(error);
+          });
+      });
+    });
+  }
+
   connect() {
     return new Promise((resolve, reject) => {
       this.connection.connect((err) => {

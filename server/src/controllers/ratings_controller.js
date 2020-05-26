@@ -1,22 +1,20 @@
 import mysql from 'mysql';
 import { Database, cnfg } from '../db';
-import { createMySqlDate } from '../utils/format';
-import { genSaltedPassword } from '../utils/encrypt';
 
 
 const GET_RATINGS =
-`SELECT r.RecipeName, ratings.Rating
+`SELECT r.RecipeName, rates.Rating
 FROM recipes r
 JOIN rates ON r.RecipeID = rates.RecipeID
 WHERE rates.UserID = ?`;
 export const getRatings = (req, res) => {
     db.query(GET_RATINGS, req.user.userID)
     .then((result) => {
-        res.status(200).json({error: null, response: result });
+        res.status(200).json({ error: null, response: result });
     })
     .catch((err) => {
         console.log(err);
-        res.status(500).json({ error: err.sqlMessage, response: null});
+        res.status(500).json({ error: err.sqlMessage, response: null });
     });
 
 };
@@ -52,9 +50,7 @@ export const addRating = (req, res) => {
       res.status(500).json({ error: err.sqlMessage, response: null });
     });
 };
-    
-
-
+   
 
 
 const UPDATE_RATING =

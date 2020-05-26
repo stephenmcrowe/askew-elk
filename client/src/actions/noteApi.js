@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { ActionTypes, ROOT_URL } from './index';
 
-export function getRecipe(id) {
+export function fetchNote(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipe/${id}`;
+      const url = `${ROOT_URL}/savednotes/${id}`;
       console.log(`GET: ${url}`);
       axios.get(url)
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
+          dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
           resolve(response);
         })
         .catch((error) => {
@@ -20,22 +20,21 @@ export function getRecipe(id) {
   };
 }
 
-export function getRecipes(params) {
+export function fetchNotes(params) {
   /*
    * Params should look like:
    * {
-   *    recipeName: str
-   *    recipeAuthor: username (str)
+   *    noteName: str
    * }
    */
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipes`;
+      const url = `${ROOT_URL}/savenotes`;
       console.log(`GET: ${url}`);
       axios.get(url, { params })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPES, payload: response });
+          dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
           resolve(response);
         })
         .catch((error) => {
@@ -46,23 +45,17 @@ export function getRecipes(params) {
   };
 }
 
-export function createRecipe(recipe) {
-  /*
-   * recipe should look like:
-   * {
-   *    recipeName: str
-   *    recipeAuthor: username (str)
-   * }
-   */
+export function createNote(note, history) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipes`;
+      const url = `${ROOT_URL}/savednotes`;
       console.log(`POST: ${url}`);
-      axios.post(url, recipe)
+      axios.post(url, note)
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPES, payload: response });
+          dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
           resolve(response);
+          history.push('/savednotes');
         })
         .catch((error) => {
           dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -72,15 +65,15 @@ export function createRecipe(recipe) {
   };
 }
 
-export function updateRecipe(recipe) {
+export function updateNote(note) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipes/${recipe.id}`;
+      const url = `${ROOT_URL}/savednotes/${note.id}?`;
       console.log(`UPDATE: ${url}`);
-      axios.put(url, recipe)
+      axios.put(url, note)
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
+          dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
           resolve(response);
         })
         .catch((error) => {
@@ -91,17 +84,17 @@ export function updateRecipe(recipe) {
   };
 }
 
-export function deleteRecipe(recipe, history) {
+export function deleteNote(id, history) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipes`;
+      const url = `${ROOT_URL}/savednotes/${id}`;
       console.log(`DELETE: ${url}`);
-      axios.delete(url, recipe)
+      axios.delete(url)
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
+          dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
           resolve(response);
-          history.push('/');
+          history.push('/savednotes');
         })
         .catch((error) => {
           dispatch({ type: ActionTypes.ERROR_SET, error });

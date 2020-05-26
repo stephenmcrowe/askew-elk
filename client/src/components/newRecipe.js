@@ -19,7 +19,7 @@ class NewRecipe extends Component {
       Ingredients: [],
       instruction: '',
       Instructions: [],
-      submitting: true,
+      submitting: false,
     };
   }
 
@@ -94,6 +94,78 @@ class NewRecipe extends Component {
     return (<PulseLoader />);
   }
 
+  // eslint-disable-next-line consistent-return
+  renderSwitch = () => {
+    if (this.state.submitting) {
+      return (<PulseLoader />);
+    } else {
+      return (
+        <button
+          type="button"
+          onClick={this.handleSubmit}
+          id="addRecipeButton"
+        >
+          Add Recipe
+        </button>
+      );
+    }
+  }
+
+  // onButtonDelete = () => {
+  //   const { Categories } = this.state;
+  //   const d = document.getElementById('inputedCategory');
+  //   console.log(d);
+  //   d.parentNode.removeChild(d);
+  //   document.get;
+  //   const index = Categories.indexOf(d.value);
+  //   if (index > -1) { Categories.splice(index, 1); }
+  //   this.setState({ Categories });
+  // }
+
+  renderCategories = () => {
+    return (
+      this.state.Categories.map((x) => {
+        return (
+          <button type="button"
+            id="inputedCategory"
+            // eslint-disable-next-line react/no-array-index-key
+            key={x}
+            // onClick={() => {
+            //   const { Categories } = this.state;
+            //   const d = document.getElementById('inputedCategory');
+            //   console.log(d);
+            //   d.parentNode.removeChild(d);
+            //   const index = Categories.indexOf(d.value);
+            //   if (index > -1) { Categories.splice(index, 1); }
+            //   this.setState({ Categories });
+            // }}
+          > {x}
+          </button>
+        );
+      })
+    );
+  }
+
+  renderIngredients = () => {
+    return (
+      this.state.Ingredients.map((x) => {
+        return (
+          <button type="button" id="inputedIngredient" key={x}> {x} </button>
+        );
+      })
+    );
+  }
+
+  renderInstructions = () => {
+    return (
+      this.state.Instructions.map((x) => {
+        return (
+          <button type="button" id="inputedInstruction" key={x}> {x} </button>
+        );
+      })
+    );
+  }
+
   log = () => {
     console.log(this.state);
   }
@@ -105,8 +177,9 @@ class NewRecipe extends Component {
           Add your own recipe!
         </div>
         <form>
-          Recipe Name
           <label htmlFor="recipeName">
+            Recipe Name
+
             <input
               type="text"
               name="recipeName"
@@ -114,8 +187,8 @@ class NewRecipe extends Component {
               value={this.state.RecipeName}
             />
           </label>
-          Recipe Author
           <label htmlFor="recipeAuthor">
+            Recipe Author
             <input
               type="text"
               name="recipeAuthor"
@@ -123,8 +196,8 @@ class NewRecipe extends Component {
               value={this.state.RecipeAuthor}
             />
           </label>
-          Recipe Rating
           <label htmlFor="rating">
+            Recipe Rating
             <input
               type="text"
               name="rating"
@@ -132,8 +205,8 @@ class NewRecipe extends Component {
               value={this.state.Rating}
             />
           </label>
-          Recipe Description
           <label htmlFor="recipeDescription">
+            Recipe Description
             <textarea
               type="text"
               name="description"
@@ -141,14 +214,8 @@ class NewRecipe extends Component {
               value={this.state.Description}
             />
           </label>
-          Recipe Categories
           <label htmlFor="recipeCategories">
-            <input
-              type="text"
-              name="categories"
-              onChange={this.onInputCategoryChange}
-              value={this.state.Category}
-            />
+            Recipe Categories
             <button
               type="button"
               onClick={this.onSubmitCategory}
@@ -156,15 +223,19 @@ class NewRecipe extends Component {
             >
               +
             </button>
-          </label>
-          Recipe Ingredients
-          <label htmlFor="recipeIngredients">
+            <span id="exampleText">(&quot;Seafood&quot;)</span>
             <input
               type="text"
-              name="ingredients"
-              onChange={this.onInputIngredientChange}
-              value={this.state.ingredient}
+              name="categories"
+              onChange={this.onInputCategoryChange}
+              value={this.state.category}
             />
+          </label>
+          <div className="inputed">
+            {this.renderCategories()}
+          </div>
+          <label htmlFor="recipeIngredients">
+            Recipe Ingredients
             <button
               type="button"
               onClick={this.onSubmitIngredient}
@@ -172,15 +243,19 @@ class NewRecipe extends Component {
             >
               +
             </button>
-          </label>
-          Recipe Instructions
-          <label htmlFor="recipeInstructions">
+            <span id="exampleText">(&quot;1 cup of white flour&quot;)</span>
             <input
               type="text"
-              name="instructions"
-              onChange={this.onInputInstructionChange}
-              value={this.state.instruction}
+              name="ingredients"
+              onChange={this.onInputIngredientChange}
+              value={this.state.ingredient}
             />
+          </label>
+          <div className="inputed">
+            {this.renderIngredients()}
+          </div>
+          <label htmlFor="recipeInstructions">
+            Recipe Instructions
             <button
               type="button"
               onClick={this.onSubmitInstruction}
@@ -188,17 +263,20 @@ class NewRecipe extends Component {
             >
               +
             </button>
+            <span id="exampleText">(&quot;Cut the potato into bite-sized cubes&quot;)</span>
+            <textarea
+              type="text"
+              name="instructions"
+              onChange={this.onInputInstructionChange}
+              value={this.state.instruction}
+            />
           </label>
-          <button
-            type="submit"
-            onClick={this.handleSubmit}
-            id="addRecipeButton"
-          >
-            Add Recipe
-          </button>
+          <div className="inputed">
+            {this.renderInstructions()}
+          </div>
         </form>
+        {this.renderSwitch()}
         <button type="button" onClick={this.log}>Log</button>
-        {this.renderLoading()}
       </div>
     );
   }

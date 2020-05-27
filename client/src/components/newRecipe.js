@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { createRecipe } from '../actions/recipeApi';
 
+import Instructions from './instructions';
+
 class NewRecipe extends Component {
   constructor(props) {
     super(props);
@@ -11,12 +13,11 @@ class NewRecipe extends Component {
     this.state = {
       RecipeName: '',
       RecipeAuthor: '',
-      Rating: '',
       Description: '',
       category: '',
-      Categories: [],
+      Categories: new Set(),
       ingredient: '',
-      Ingredients: [],
+      Ingredients: new Set(),
       instruction: '',
       Instructions: [],
       submitting: false,
@@ -33,54 +34,53 @@ class NewRecipe extends Component {
     this.setState({ RecipeAuthor: event.target.value });
   }
 
-  onInputRatingChange = (event) => {
-    console.log(event.target.value);
-    this.setState({ Rating: event.target.value });
-  }
-
   onInputDescriptionChange = (event) => {
-    console.log(event.target.value);
     this.setState({ Description: event.target.value });
   }
 
   onInputCategoryChange = (event) => {
-    console.log(event.target.value);
     this.setState({ category: event.target.value });
   }
 
   onSubmitCategory = (event) => {
     const { Categories, category } = this.state;
-    Categories.push(category);
+    Categories.add(category);
     this.setState({ Categories, category: '' });
   }
 
   onInputIngredientChange = (event) => {
-    console.log(event.target.value);
     this.setState({ ingredient: event.target.value });
   }
 
   onSubmitIngredient = () => {
     const { Ingredients, ingredient } = this.state;
-    Ingredients.push(ingredient);
+    Ingredients.add(ingredient);
     this.setState({ Ingredients, ingredient: '' });
   }
 
   onInputInstructionChange = (event) => {
-    console.log(event.target.value);
     this.setState({ instruction: event.target.value });
   }
 
   onSubmitInstruction = () => {
-    const { Instructions, instruction } = this.state;
-    Instructions.push(instruction);
-    this.setState({ Instructions, instruction: '' });
+    const { Instructions: ins, instruction } = this.state;
+    ins.push(instruction);
+    this.setState({ Instructions: ins, instruction: '' });
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
     console.log('submitting!');
     this.setState({ submitting: true });
-    this.props.createRecipe(this.state)
+    const payload = {
+      RecipeName: this.state.RecipeName,
+      RecipeAuthor: this.state.RecipeAuthor,
+      Description: this.state.Description,
+      Categories: this.state.Categories.values(),
+      Ingredients: this.state.Ingredients.values(),
+      Instructions: this.state.Instructions.values(),
+    };
+    this.props.createRecipe(payload)
       .then((result) => {
         console.log(result);
         this.props.navigation.push(`/recipe/${result}`);
@@ -90,80 +90,90 @@ class NewRecipe extends Component {
       });
   }
 
-  renderLoading = () => {
-    return (<PulseLoader />);
-  }
-
-  // eslint-disable-next-line consistent-return
   renderSwitch = () => {
     if (this.state.submitting) {
       return (<PulseLoader />);
-    } else {
-      return (
-        <button
-          type="button"
-          onClick={this.handleSubmit}
-          id="addRecipeButton"
-        >
-          Add Recipe
-        </button>
-      );
     }
+    return (
+      <button
+        type="button"
+        onClick={this.handleSubmit}
+        id="addRecipeButton"
+      >
+        Add Recipe
+      </button>
+    );
   }
 
-  // onButtonDelete = () => {
-  //   const { Categories } = this.state;
-  //   const d = document.getElementById('inputedCategory');
-  //   console.log(d);
-  //   d.parentNode.removeChild(d);
-  //   document.get;
-  //   const index = Categories.indexOf(d.value);
-  //   if (index > -1) { Categories.splice(index, 1); }
-  //   this.setState({ Categories });
-  // }
+  onButtonDelete = (stateKey, toFind) => {
+    this.setState((prevState) => {
+      prevState[stateKey].delete(toFind);
+      return { [stateKey]: prevState[stateKey] };
+    });
+  }
+
+  onButtonInsDelete = (stateKey, idx) => {
+    this.setState((prevState) => {
+      prevState[stateKey].splice(idx, 1);
+      return { [stateKey]: prevState[stateKey] };
+    });
+  }
+
+  reorderItem = (stateKey, currPos, nextPos) => {
+    this.setState((prevState) => {
+      const ele = this.state[stateKey][currPos];
+      prevState[stateKey].splice(currPos, 1);
+      prevState[stateKey].splice(nextPos, 0, ele);
+      return { [stateKey]: prevState[stateKey] };
+    });
+  }
 
   renderCategories = () => {
-    return (
-      this.state.Categories.map((x) => {
-        return (
-          <button type="button"
-            id="inputedCategory"
-            // eslint-disable-next-line react/no-array-index-key
-            key={x}
-            // onClick={() => {
-            //   const { Categories } = this.state;
-            //   const d = document.getElementById('inputedCategory');
-            //   console.log(d);
-            //   d.parentNode.removeChild(d);
-            //   const index = Categories.indexOf(d.value);
-            //   if (index > -1) { Categories.splice(index, 1); }
-            //   this.setState({ Categories });
-            // }}
-          > {x}
-          </button>
-        );
-      })
-    );
+    const render = [];
+    this.state.Categories.forEach((c) => {
+      render.push(
+        <button
+          className="inputtedCategory"
+          key={c}
+          onClick={() => this.onButtonDelete('Categories', c)}
+          type="button"
+        >{c}
+        </button>,
+      );
+    });
+    return render;
   }
 
   renderIngredients = () => {
-    return (
-      this.state.Ingredients.map((x) => {
-        return (
-          <button type="button" id="inputedIngredient" key={x}> {x} </button>
-        );
-      })
-    );
+    const render = [];
+    this.state.Ingredients.forEach((i) => {
+      render.push(
+        <button
+          className="inputtedIngredient"
+          key={i}
+          onClick={() => this.onButtonDelete('Ingredients', i)}
+          type="button"
+        >{i}
+        </button>,
+      );
+    });
+    return render;
   }
 
   renderInstructions = () => {
-    return (
-      this.state.Instructions.map((x) => {
-        return (
-          <button type="button" id="inputedInstruction" key={x}> {x} </button>
-        );
-      })
-    );
+    const render = [];
+    this.state.Instructions.forEach((i, idx) => {
+      render.push(
+        <button
+          className="inputtedInstruction"
+          key={i}
+          onClick={() => this.onButtonInsDelete('Instructions', idx)}
+          type="button"
+        >{`${idx + 1}: ${i}`}
+        </button>,
+      );
+    });
+    return render;
   }
 
   log = () => {
@@ -179,7 +189,6 @@ class NewRecipe extends Component {
         <form>
           <label htmlFor="recipeName">
             Recipe Name
-
             <input
               type="text"
               name="recipeName"
@@ -194,15 +203,6 @@ class NewRecipe extends Component {
               name="recipeAuthor"
               onChange={this.onInputRecipeAuthorChange}
               value={this.state.RecipeAuthor}
-            />
-          </label>
-          <label htmlFor="rating">
-            Recipe Rating
-            <input
-              type="text"
-              name="rating"
-              onChange={this.onInputRatingChange}
-              value={this.state.Rating}
             />
           </label>
           <label htmlFor="recipeDescription">
@@ -223,11 +223,12 @@ class NewRecipe extends Component {
             >
               +
             </button>
-            <span id="exampleText">(&quot;Seafood&quot;)</span>
+            {/* <span id="exampleText">(&quot;Seafood&quot;)</span> */}
             <input
               type="text"
               name="categories"
               onChange={this.onInputCategoryChange}
+              placeholder={'e.g. "Seafood"'}
               value={this.state.category}
             />
           </label>
@@ -243,15 +244,16 @@ class NewRecipe extends Component {
             >
               +
             </button>
-            <span id="exampleText">(&quot;1 cup of white flour&quot;)</span>
+            {/* <span id="exampleText">(&quot;1 cup of white flour&quot;)</span> */}
             <input
               type="text"
               name="ingredients"
               onChange={this.onInputIngredientChange}
+              placeholder={'e.g. "1 cup of white flour"'}
               value={this.state.ingredient}
             />
           </label>
-          <div className="inputed">
+          <div className="inputted">
             {this.renderIngredients()}
           </div>
           <label htmlFor="recipeInstructions">
@@ -263,16 +265,23 @@ class NewRecipe extends Component {
             >
               +
             </button>
-            <span id="exampleText">(&quot;Cut the potato into bite-sized cubes&quot;)</span>
+            {/* <span id="exampleText">(&quot;Cut the potato into bite-sized cubes&quot;)</span> */}
             <textarea
               type="text"
               name="instructions"
               onChange={this.onInputInstructionChange}
+              placeholder={'e.g. "Cut the potato into bite-sized cubes"'}
               value={this.state.instruction}
             />
           </label>
-          <div className="inputed">
-            {this.renderInstructions()}
+          <div className="inputted">
+            {/* {this.renderInstructions()} */}
+            <Instructions
+              stateKey="Instructions"
+              onButtonInsDelete={this.onButtonInsDelete}
+              reorderItem={this.reorderItem}
+              Instructions={this.state.Instructions}
+            />
           </div>
         </form>
         {this.renderSwitch()}

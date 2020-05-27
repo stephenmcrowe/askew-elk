@@ -554,7 +554,6 @@ html {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      // justify-content: center;
       width: 80%;
       padding-bottom: 5vh;
 
@@ -562,18 +561,18 @@ html {
         width: 100%;
         height: 80%;
         font-family: 'Lato', sans-serif;
-        font-size: 14px;
+        font-size: medium;
       }
 
       textarea {
         width: 100%;
         height: 20vh;
         font-family: 'Lato', sans-serif;
-        font-size: 14px;
+        font-size: small;
       }
     }
 
-    .inputed {
+    .inputted {
       width: 80%;
       margin-bottom: 5vh;
     }

@@ -525,22 +525,23 @@ html {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      // justify-content: center;
       width: 80%;
       padding-bottom: 5vh;
 
       input {
         width: 100%;
         height: 80%;
+        font-size: medium;
       }
 
       textarea {
         width: 100%;
         height: 20vh;
+        font-size: small;
       }
     }
 
-    .inputed {
+    .inputted {
       width: 80%;
       margin-bottom: 5vh;
     }
@@ -564,7 +565,7 @@ html {
   }
 }
 
-#inputedCategory, #inputedIngredient {
+.inputtedCategory, .inputtedIngredient {
   background-color: rgb(163, 243, 13);
   border: none;
   border-radius: 20px;
@@ -574,7 +575,7 @@ html {
   font-size: 14px;
 }
 
-#inputedInstruction {
+.inputtedInstruction {
   background-color: rgb(163, 243, 13);
   border: none;
   border-radius: 5px;

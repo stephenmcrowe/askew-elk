@@ -4,26 +4,29 @@ import { connect } from 'react-redux';
 
 class Recipe extends Component {
   render() {
-    const recipes = this.props.recipe.all.map((r) => {
-      return (
-        <div key={r.id} className="recipe-container">
-          <div className="recipe-container-inner">
-            <NavLink id="recipeLink" to={`/recipe/${r.id}`}>
-              <div className="frontSide">
-                <h2 id="recipeName">{r.recipeName}</h2>
-                <h3 id="recipeRating">Rated {r.rating}/5</h3>
-                <h4 id="recipeAuthor">Created by: {r.recipeAuthor}</h4>
-              </div>
-              <div className="backSide">
-                <h2 id="recipeName">{r.recipeName}</h2>
-                <h3>Description:</h3>
-                <h3 id="recipeDescription">{r.description}</h3>
-              </div>
-            </NavLink>
+    let recipes = <h2>No recipes yet!</h2>;
+    if (this.props.recipe.all.length !== 0) {
+      recipes = this.props.recipe.all.map((r) => {
+        const description = r.Description ? r.Description : 'No description';
+        return (
+          <div key={r.id} className="recipe-container">
+            <div className="recipe-container-inner">
+              <NavLink id="recipeLink" to={`/recipe/${r.id}`}>
+                <div className="frontSide">
+                  <h2 id="recipeName">{r.RecipeName}</h2>
+                  <h3 id="recipeRating">Rated {r.Rating}/5</h3>
+                  <h4 id="recipeAuthor">Created by: {r.RecipeAuthor}</h4>
+                </div>
+                <div className="backSide">
+                  <h2 id="recipeName">{r.RecipeName}</h2>
+                  <h3 id="recipeDescription">{description}</h3>
+                </div>
+              </NavLink>
+            </div>
           </div>
-        </div>
-      );
-    });
+        );
+      });
+    }
     return recipes;
   }
 }

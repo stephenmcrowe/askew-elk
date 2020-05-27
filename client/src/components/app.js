@@ -31,7 +31,7 @@ const App = (props) => {
           <PrivateRoute exact path="/recipe/create" component={NewRecipe} />
           <PrivateRoute exact path="/recipe/:id" component={DetailedRecipe} />
           <PrivateRoute exact path="/savednotes" component={SavedNotes} />
-          <PrivateRoute path="/" component={UserPage} />
+          <PrivateRoute path="/browse" component={UserPage} />
           <Route component={FallBack} />
         </Switch>
       </Router>

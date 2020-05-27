@@ -29,12 +29,12 @@ class SavedNotes extends Component {
         <div key={r.id} className="recipe-container">
           <div className="recipe-container-inner">
             <NavLink id="recipeLink" to={`/savednotes/${r.id}`}>
-              <h2 id="recipeName">{r.recipeName}</h2>
-              <h3 id="recipeRating">Rated {r.rating}/5</h3>
-              <h4 id="recipeAuthor">Created by: {r.recipeAuthor}</h4>
-              <h2 id="recipeName">{r.recipeName}</h2>
+              <h2 id="recipeName">{r.RecipeName}</h2>
+              <h3 id="recipeRating">Rated {r.Rating}/5</h3>
+              <h4 id="recipeAuthor">Created by: {r.RecipeAuthor}</h4>
+              <h2 id="recipeName">{r.RecipeName}</h2>
               <h3>Description:</h3>
-              <h3 id="recipeDescription">{r.description}</h3>
+              <h3 id="recipeDescription">{r.Description}</h3>
             </NavLink>
           </div>
         </div>

@@ -6,7 +6,8 @@ export function fetchNote(id) {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/savednotes/${id}`;
       console.log(`GET: ${url}`);
-      axios.get(url)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
@@ -31,7 +32,8 @@ export function fetchNotes(params) {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/savenotes`;
       console.log(`GET: ${url}`);
-      axios.get(url, { params })
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { params, headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
@@ -50,7 +52,8 @@ export function createNote(note, history) {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/savednotes`;
       console.log(`POST: ${url}`);
-      axios.post(url, note)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.post(url, note, { headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
@@ -70,7 +73,8 @@ export function updateNote(note) {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/savednotes/${note.id}?`;
       console.log(`UPDATE: ${url}`);
-      axios.put(url, note)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.put(url, note, { headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
@@ -89,7 +93,8 @@ export function deleteNote(id, history) {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/savednotes/${id}`;
       console.log(`DELETE: ${url}`);
-      axios.delete(url)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.delete(url, { headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });

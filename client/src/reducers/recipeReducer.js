@@ -1,12 +1,12 @@
 import { ActionTypes } from '../actions';
-import { recipeState } from './mockStates';
+// import { recipeState } from './mockStates';
 
 const initialState = {
   all: [],
   current: {},
 };
 
-const RecipeReducer = (state = recipeState, action) => {
+const RecipeReducer = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_RECIPES:
       return { ...state, all: action.payload };

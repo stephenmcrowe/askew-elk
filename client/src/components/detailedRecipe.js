@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PulseLoader from 'react-spinners/PulseLoader';
 import hashCode from './utils';
 import SignOutButton from './signOutButton';
-import { updateRecipe } from '../actions/recipeApi';
+import { getRecipe, updateRecipe } from '../actions/recipeApi';
 
 
 class DetailedRecipe extends Component {
@@ -28,6 +28,11 @@ class DetailedRecipe extends Component {
     };
   }
 
+  componentDidMount() {
+    console.log(this.props.match.params.id);
+    this.props.getRecipe(this.props.match.params.id);
+  }
+
   handleBack = () => {
     this.props.history.push('/browse');
   };
@@ -44,13 +49,13 @@ class DetailedRecipe extends Component {
     const { current: r } = this.props.recipe;
     this.setState({
       id: r.id,
-      RecipeName: r.recipeName,
-      RecipeAuthor: r.recipeAuthor,
-      Rating: r.rating,
-      Description: r.description,
-      Categories: r.categories,
-      Ingredients: r.ingredients,
-      Instructions: r.instructions,
+      RecipeName: r.RecipeName,
+      RecipeAuthor: r.RecipeAuthor,
+      Rating: r.Rating,
+      Description: r.Description,
+      Categories: r.Categories,
+      Ingredients: r.Ingredients,
+      Instructions: r.Instructions,
       isEditing: true,
     });
   }
@@ -243,27 +248,40 @@ class DetailedRecipe extends Component {
       );
     } else { // NOT EDITING
       const { current: r } = this.props.recipe;
-      const directions = r.directions.map((d, idx) => {
-        console.log(typeof (d));
-        return <div className="direction-container" key={hashCode(d)}> <span id="stepText">Step {`${idx + 1}:`} </span> {`${d}`}</div>;
-      });
-      const ingredients = r.ingredients.map((i) => {
-        return <div className="ingredient-container" key={hashCode(i)}>{i}</div>;
-      });
-      const categories = r.categories.map((c) => {
-        return <button type="button" key={hashCode(c)}>{c}</button>;
-      });
+      let description = null;
+      if (r.Description) {
+        description = <h3>&quot;{r.Description}&quot;</h3>;
+      }
+      let directions = null;
+      if (r.Directions) {
+        directions = r.Directions.map((d, idx) => {
+          console.log(typeof (d));
+          return <div className="direction-container" key={hashCode(d)}> <span id="stepText">Step {`${idx + 1}:`} </span> {`${d}`}</div>;
+        });
+      }
+      let ingredients = null;
+      if (r.Ingredients) {
+        ingredients = r.Ingredients.map((i) => {
+          return <div className="ingredient-container" key={hashCode(i)}>{i}</div>;
+        });
+      }
+      let categories = null;
+      if (r.Categories) {
+        categories = r.Categories.map((c) => {
+          return <button type="button" key={hashCode(c)}>{c}</button>;
+        });
+      }
       console.log(r);
       return (
         <div className="detailed-userpage">
           <SignOutButton />
           {this.backButton()}
-          <h2>{r.recipeName}</h2>
+          <h2>{r.RecipeName}</h2>
           <h3>
-            {r.recipeAuthor} | Rated {r.rating}/5
+            {r.RecipeAuthor} | Rated {r.Rating}/5
             <button type="button" id="editButton" onClick={this.handleEditClick}> EDIT </button>
           </h3>
-          <h3>&quot;{r.description}&quot;</h3>
+          {description}
           <div className="detailed-body">
             <div className="detailed-ingredients">
               <h3> Ingredients </h3>
@@ -293,4 +311,9 @@ const mapStateToProps = (reduxState) => {
   };
 };
 
-export default connect(mapStateToProps, { updateRecipe })(DetailedRecipe);
+const mapDispatchToProps = {
+  getRecipe,
+  updateRecipe,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailedRecipe);

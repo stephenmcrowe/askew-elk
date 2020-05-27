@@ -408,7 +408,6 @@ html {
     flex-wrap: wrap;
     justify-content: space-evenly;
     width: 100%;
-    margin-bottom: 10vh;
 
     h3 {
       text-decoration: underline;
@@ -417,7 +416,7 @@ html {
     // INGREDIENTS
     .detailed-ingredients {
       width: 40%;
-      margin-top: 10vh;
+      margin-top: 20px;
       word-wrap: break-word;
       display: flex;
       flex-direction: row;
@@ -445,7 +444,7 @@ html {
     // CATEGORIES
     .detailed-categories {
       width: 40%;
-      margin-top: 10vh;
+      margin-top: 20px;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
@@ -465,15 +464,14 @@ html {
     //DIRECTIONS
     .detailed-directions {
       width: 80%;
-      margin-top: 10vh;
-      margin-top: 10vh;
+      margin-top: 40px;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: center;
 
       h3 {
-        font-size: 30px;
+        font-size: 24px;
       }
 
       #stepText {
@@ -489,7 +487,7 @@ html {
         padding-left: 10px;
         padding-right: 10px;
         background-color: rgb(163, 243, 13);
-        font-size: 20px;
+        font-size: 18px;
       }
     }
   }

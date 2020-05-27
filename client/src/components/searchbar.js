@@ -7,6 +7,10 @@ class SearchBar extends Component {
     this.state = { searchterm: '' };
   }
 
+  handleSearch = () => {
+    this.props.search(this.props.pathname, this.state.searchterm);
+  }
+
   onInputSearchChange = (event) => {
     this.setState({ searchterm: event.target.value });
   }
@@ -24,6 +28,7 @@ class SearchBar extends Component {
           value={this.state.searchterm}
         />
         <button type="button" onClick={this.log}>Log</button>
+        <button type="button" onClick={this.handleSearch}>Search</button>
       </div>
     );
   }

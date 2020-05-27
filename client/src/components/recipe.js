@@ -8,7 +8,7 @@ class Recipe extends Component {
       return (
         <div key={r.id} className="recipe-container">
           <div className="recipe-container-inner">
-            <NavLink id="recipeLink" to={`/recipe/${r.id}`}>
+            <NavLink id="deLink" to={`/recipe/${r.id}`}>
               <div className="frontSide">
                 <h2 id="recipeName">{r.recipeName}</h2>
                 <h3 id="recipeRating">Rated {r.rating}/5</h3>
@@ -16,7 +16,6 @@ class Recipe extends Component {
               </div>
               <div className="backSide">
                 <h2 id="recipeName">{r.recipeName}</h2>
-                <h3>Description:</h3>
                 <h3 id="recipeDescription">{r.description}</h3>
               </div>
             </NavLink>

@@ -15,6 +15,8 @@ import UserPage from './userpage';
 import DetailedRecipe from './detailedRecipe';
 import NewRecipe from './newRecipe';
 import SavedNotes from './savednotes';
+import NewSavedNote from './newSavedNote';
+import DetailedSavedNote from './detailedSavedNote';
 
 const FallBack = (props) => {
   return <div>URL Not Found</div>;
@@ -30,6 +32,8 @@ const App = (props) => {
           <Route exact path="/signup" component={Signup} />
           <PrivateRoute exact path="/recipe/create" component={NewRecipe} />
           <PrivateRoute exact path="/recipe/:id" component={DetailedRecipe} />
+          <PrivateRoute exact path="/savednotes/create" component={NewSavedNote} />
+          <PrivateRoute exact path="/savednotes/:id" component={DetailedSavedNote} />
           <PrivateRoute exact path="/savednotes" component={SavedNotes} />
           <PrivateRoute path="/" component={UserPage} />
           <Route component={FallBack} />

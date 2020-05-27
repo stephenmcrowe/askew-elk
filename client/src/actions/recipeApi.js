@@ -101,7 +101,7 @@ export function deleteRecipe(recipe, history) {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
           resolve(response);
-          history.push('/');
+          history.push('/recipe');
         })
         .catch((error) => {
           dispatch({ type: ActionTypes.ERROR_SET, error });

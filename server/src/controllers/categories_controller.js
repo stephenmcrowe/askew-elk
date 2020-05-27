@@ -1,10 +1,26 @@
 import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
-const GET_ALL_CATEGORIES = 'SELECT * FROM categories';
-export const getCategories = (req, res) => {
+//const GET_ALL_CATEGORIES = 'SELECT * FROM categories';
+//export const getCategories = (req, res) => {
+//  const db = new Database(cnfg);
+//  db.query(GET_ALL_CATEGORIES)
+//    .then((result) => {
+//      res.status(200).json({ error: null, response: result });
+//      return db.close();
+//    })
+//    .catch((err) => {
+//      db.close();
+//      console.log(err);
+//      res.status(500).json({ error: err.sqlMessage, response: null });
+//    });
+//};
+
+
+const GET_CATEGORY = 'SELECT CategoryID FROM categories WHERE CategoryName = ?';
+export const getCategory = (req, res) => {
   const db = new Database(cnfg);
-  db.query(GET_ALL_CATEGORIES)
+  db.query(GET_CATEGORY, req.body.CategoryName)
     .then((result) => {
       res.status(200).json({ error: null, response: result });
       return db.close();

@@ -79,7 +79,7 @@ router.route('/categories/:id')
   .put(requireAuth, Categories.updateCategory);
 
 router.route('/categories')
-  .get(Categories.getCategories);
+  .get(Categories.getCategory);
 
 router.route('/ingredients/:id')
   .put(requireAuth, Ingredients.updateIngredient);

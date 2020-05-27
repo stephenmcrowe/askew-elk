@@ -8,7 +8,15 @@ JOIN recipes r ON f.RecipeID = r.RecipeID
 WHERE UserID = ?`;
 export const getFavorites = (req, res) => {
   const db = new Database(cnfg);
-  db.query(GET_FAVORITES, req.user.userID)
+  // let params = [];
+  let query = GET_FAVORITES;
+  // params.push(req.user.userID);
+  if('RecipeName' in req.body) {
+    query = `${GET_FAVORITES} AND RecipeName LIKE '%${req.body.RecipeName}%'`;
+    // params.push(req.body.RecipeName);
+  }
+
+  db.query(query, req.user.userID)
     .then((result) => {
       res.status(200).json({ error: null, response: result });
       db.close();
@@ -26,7 +34,7 @@ export const getFavorite = (req, res) => {
   const db = new Database(cnfg);
   db.query(GET_FAVORITE, [req.user.userID, req.body.RecipeID])
     .then((result) => {
-      res.status(200).json({ error: null, response: result });
+      res.status(200).json({ error: null, response: result[0] });
       db.close();
     })
     .catch((err) => {

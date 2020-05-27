@@ -4,8 +4,17 @@ import { Database, cnfg } from '../db';
 
 const WHERE_ID = 'WHERE recipeID = ?';
 const SELECT_ONE = `
-SELECT RecipeName, RecipeAuthor, DateAdded, Description, Rating, NumberOfRatings
-FROM recipes
+SELECT r.*, 
+GROUP_CONCAT(DISTINCT c.CategoryName ORDER BY c.CategoryName DESC SEPARATOR '|') as Categories,
+GROUP_CONCAT(DISTINCT i.IngredientName ORDER BY i.IngredientName DESC SEPARATOR '|') as Ingredients,
+GROUP_CONCAT(DISTINCT d.Direction ORDER BY d.StepNumber ASC SEPARATOR '|') as Directions
+FROM recipes r
+JOIN recipetoingredient ri  ON ri.RecipeID = r.RecipeID
+JOIN ingredients i ON i.IngredientID = ri.IngredientID
+JOIN recipetocategory rc ON rc.RecipeID = r.RecipeID
+JOIN categories c ON c.CategoryID = rc.CategoryID
+JOIN directions d ON r.RecipeID = d.RecipeID
+WHERE r.RecipeID = ?
 `;
 const STEPHENS_CODE = `
 SELECT r.*, GROUP_CONCAT(DISTINCT c.categoryID SEPARATOR ', '),
@@ -14,7 +23,6 @@ FROM recipes r
 JOIN recipetocategory rc ON rc.RecipeID = r.RecipeID
 JOIN categories c ON c.CategoryID = rc.CategoryID
 WHERE r.recipeID = 4;`;
-const SELECT_BY_ID = `${SELECT_ONE} ${WHERE_ID}`;
 // export const getRecipe = (req, res) => {
 //   const db = new Database(cnfg);
 //   db.query(SELECT_BY_ID, req.params.id)
@@ -35,10 +43,10 @@ export const getRecipe = (req, res) => {
   // console.log(req.params.id);
   const db = new Database(cnfg);
   db.createTransaction(() => {
-    return db.query(SELECT_BY_ID, req.params.id);
+    return db.query(SELECT_ONE, req.params.id);
   })
     .then((result) => {
-      res.status(200).json({ error: null, response: result });
+      res.status(200).json({ error: null, response: result[0] });
     })
     .catch((err) => {
       console.log(err);

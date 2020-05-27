@@ -26,7 +26,7 @@ export const getFavorite = (req, res) => {
   const db = new Database(cnfg);
   db.query(GET_FAVORITE, [req.user.userID, req.body.RecipeID])
     .then((result) => {
-      res.status(200).json({ error: null, response: result });
+      res.status(200).json({ error: null, response: result[0] });
       db.close();
     })
     .catch((err) => {

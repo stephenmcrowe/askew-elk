@@ -8,7 +8,9 @@ import * as Users from './controllers/user_controller';
 import * as Histories from './controllers/history_controller';
 import * as Favorites from './controllers/favorites_controller';
 import * as Ratings from './controllers/ratings_controller';
-// import * as Directions from './controllers/directions_controller';
+import * as Directions from './controllers/directions_controller';
+import * as Categories from './controllers/categories_controller';
+import * as Ingredients from './controllers/ingredients_controller';
 
 const router = Router();
 
@@ -70,11 +72,19 @@ router.route('/ratings')
   .put(requireAuth, Ratings.updateRating)
   .delete(requireAuth, Ratings.deleteRating);
 
-// router.route('/directions')
-//   .put(requireAuth, Directions.updateDirection);
+router.route('/directions/:id')
+  .put(requireAuth, Directions.updateDirection);
 
-// router.route('/recipes')
-//   .get(Recipes.getRecipes)
-//   .post(Recipes.addRecipe);
+router.route('/categories/:id')
+  .put(requireAuth, Categories.updateCategory);
+
+router.route('/categories')
+  .get(Categories.getCategories);
+
+router.route('/ingredients/:id')
+  .put(requireAuth, Ingredients.updateIngredient);
+
+router.route('/ingredients/')
+  .get(Ingredients.getIngredients);
 
 export default router;

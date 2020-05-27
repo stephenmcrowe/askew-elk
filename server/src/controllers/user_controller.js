@@ -8,7 +8,7 @@ export const getUser = (req, res) => {
   const db = new Database(cnfg);
   db.query(SELECT_BY_ID, req.params.id)
     .then((result) => {
-      res.status(200).json({ error: null, response: result });
+      res.status(200).json({ error: null, response: result[0] });
       return db.close();
     })
     .catch((err) => {

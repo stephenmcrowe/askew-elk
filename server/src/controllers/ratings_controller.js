@@ -1,4 +1,3 @@
-import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
 

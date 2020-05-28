@@ -8,21 +8,8 @@ export const ActionTypes = {
   FETCH_RECIPES: 'FETCH_RECIPES',
   FETCH_RECIPE: 'FETCH_RECIPE',
   RESET_RECIPE: 'RESET_RECIPE',
-
+  FETCH_NOTES: 'FETCH_NOTES',
+  FETCH_NOTE: 'FETCH_NOTE',
+  RESET_NOTE: 'RESET_NOTE',
   ERROR_SET: 'ERROR_SET',
 };
-
-
-export function increment() {
-  return {
-    type: ActionTypes.INCREMENT,
-    payload: null,
-  };
-}
-
-export function decrement() {
-  return {
-    type: ActionTypes.DECREMENT,
-    payload: null,
-  };
-}

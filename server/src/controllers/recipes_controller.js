@@ -4,14 +4,15 @@ import { Database, cnfg } from '../db';
 
 const SELECT_ONE = `
 SELECT r.RecipeID AS id, r.RecipeName, u.UserName AS RecipeAuthor, r.Rating, r.NumberOfRatings, r.Description, r.DateAdded, 
-GROUP_CONCAT(DISTINCT c.CategoryName ORDER BY c.CategoryName DESC SEPARATOR '|') as Categories,
+(SELECT GROUP_CONCAT(DISTINCT c.CategoryName ORDER BY c.CategoryName ASC SEPARATOR '|') 
+	FROM recipes r JOIN recipetocategory rc ON rc.RecipeID = r.RecipeID
+	JOIN categories c ON c.CategoryID = rc.CategoryID
+	WHERE r.RecipeID = ?) AS Categories,
 GROUP_CONCAT(DISTINCT i.IngredientName ORDER BY i.IngredientName DESC SEPARATOR '|') as Ingredients,
 GROUP_CONCAT(DISTINCT d.Direction ORDER BY d.StepNumber ASC SEPARATOR '|') as Directions
 FROM recipes r
 JOIN recipetoingredient ri  ON ri.RecipeID = r.RecipeID
 JOIN ingredients i ON i.IngredientID = ri.IngredientID
-JOIN recipetocategory rc ON rc.RecipeID = r.RecipeID
-JOIN categories c ON c.CategoryID = rc.CategoryID
 JOIN directions d ON r.RecipeID = d.RecipeID
 JOIN users u ON r.RecipeAuthor = u.UserID
 WHERE r.RecipeID = ?;
@@ -21,7 +22,7 @@ WHERE r.RecipeID = ?;
 export const getRecipe = (req, res) => {
   const db = new Database(cnfg);
   db.createTransaction(() => {
-    return db.query(SELECT_ONE, req.params.id);
+    return db.query(SELECT_ONE, [req.params.id, req.params.id]);
   })
     .then((result) => {
       const recipe = result[0];

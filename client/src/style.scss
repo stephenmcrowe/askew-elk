@@ -346,6 +346,13 @@ html {
   transform-style: preserve-3d;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   border-radius: 1em;
+
+  a {
+    display: flex;
+    flex-flow: row wrap;
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .recipe-container:hover .recipe-container-inner {
@@ -363,6 +370,10 @@ html {
   border-radius: 1em;
   backface-visibility: hidden;
   overflow: auto;
+
+  h2 {
+    height: 20%;
+  }
 }
 
 .backSide {

@@ -1,7 +1,19 @@
 /* eslint-disable no-await-in-loop */
+/**
+ * Recipes Controller - Askew Elk
+ * 
+ * Implement CRUD operations for the recipes table and associated
+ * tables: Ingredients, Directions, Categories
+ */
 import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
+/**
+ * getRecipe()
+ * Return the detailed description for the given RecipeID
+ * Includes: Name, Author, Desription, Ratings, Directions
+ * Ingredients, Categories
+ */
 const SELECT_ONE = `
 SELECT r.RecipeID AS id, r.RecipeName, u.UserName AS RecipeAuthor, r.Rating, r.NumberOfRatings, r.Description, r.DateAdded, 
 (SELECT GROUP_CONCAT(DISTINCT c.CategoryName ORDER BY c.CategoryName ASC SEPARATOR '|') 
@@ -17,8 +29,6 @@ JOIN directions d ON r.RecipeID = d.RecipeID
 JOIN users u ON r.RecipeAuthor = u.UserID
 WHERE r.RecipeID = ?;
 `;
-
-/* Transaction version */
 export const getRecipe = (req, res) => {
   const db = new Database(cnfg);
   db.createTransaction(() => {
@@ -37,13 +47,19 @@ export const getRecipe = (req, res) => {
     });
 };
 
+/**
+ * getRecipes()
+ * Return an array of brief recipe descriptions
+ * Includes: name, Author, Rating, DateAdded, and Description
+ * For use in browse and search situations
+ * The request can specify search on several categories,
+ * including: title and author
+ */
 const SELECT_ALL = `
 SELECT RecipeID AS id, RecipeName, u.UserName AS RecipeAuthor, Rating, DateAdded, Description
 FROM Recipes r JOIN Users u ON r.RecipeAuthor = u.UserID`;
 const SELECT_WHERE = `${SELECT_ALL}
 WHERE ?`;
-
-/* Transaction version */
 export const getRecipes = (req, res) => {
   let query = [];
 
@@ -88,25 +104,40 @@ export const getRecipes = (req, res) => {
   }
 };
 
-
-// need transaction eventually
-// const ADD_RECIPE =
-// `INSERT INTO Recipes(RecipeName, RecipeAuthor, Description, DateAdded)
-// VALUES(?,?,?,?)`;
+/**
+ * addRecipe()
+ * Request to add a recipe to the database
+ * The request description is formatted below
+ * on success, returns the recipeID of the newly
+ * created Recipe
+ */
+/* Queries for adding to recipe and directions table */
 const ADD_RECIPE = 'INSERT INTO Recipes(RecipeName,RecipeAuthor, Description, DateAdded) VALUES(?,?,?,?)';
-// VALUES (?,?,?),(?, ?, ?), (?, ?, ?);
 const ADD_DIRECTIONS = 'INSERT INTO Directions (recipeID, StepNumber, Direction) VALUES ? ';
+
+/* Useful queries for getting auto-incremented keys */
 const LAST_INSERT_ID = 'last_insert_id()';
 const GET_LAST_INSERT_ID = 'SELECT last_insert_id() AS ID';
 
+/* Queries for adding ingredients */
 const CHECK_INGREDIENT = 'SELECT IngredientID FROM Ingredients WHERE IngredientName = ?';
 const ADD_INGREDIENT = 'INSERT INTO Ingredients (IngredientName) VALUES (?)';
 const ADD_RECIPE_JOIN_INGREDIENT = 'INSERT INTO recipetoingredient VALUES (?, ?)';
 
+/* Queries for adding categories */
 const CHECK_CATEGORY = 'SELECT CategoryID FROM Categories WHERE CategoryName = ?';
 const ADD_CATEGORY = 'INSERT INTO Categories (CategoryName) VALUES (?)';
 const ADD_RECIPE_JOIN_CATEGORY = 'INSERT INTO recipetocategory VALUES (?, ?)';
 
+/** We expect a request to look like this
+ * {
+ *  RecipeName:""
+ *  Description:""
+ *  Directions:{#, text},{#, text}}
+ *  Ingredients:["","",""]
+ *  Category:["","",""]
+ * }
+ */
 export const addRecipe = (req, res) => {
   const insertRecipe = [];
 
@@ -129,16 +160,6 @@ export const addRecipe = (req, res) => {
       })
       .then((lastInsertIDResult) => {
         recipeID = lastInsertIDResult[0].ID;
-        /* build the directions list
-         * {
-         *  RecipeName:""
-         *  Description:""
-         *  Directions:{#, text},{#, text}}
-         *  Ingredients:["","",""]
-         *  Category:["","",""]
-         * }
-         */
-        // start here
         let directions = [];
         Object.entries(req.body.Directions).forEach(([k, v]) => {
           directions.push(`(${LAST_INSERT_ID},${k},"${v}")`);
@@ -213,6 +234,11 @@ export const addRecipe = (req, res) => {
     });
 };
 
+/**
+ * deleteRecipe()
+ * Delete a recipe provided its recipeID and that the user is the creator
+ * of this recipe
+ */
 const DELETE_RECIPE = 'DELETE FROM RECIPES WHERE recipeID = ? AND RecipeAuthor = ?';
 export const deleteRecipe = (req, res) => {
   const db = new Database(cnfg);
@@ -222,13 +248,19 @@ export const deleteRecipe = (req, res) => {
       return db.close();
     })
     .catch((err) => {
-      // error here if no permissions
       db.close();
       console.log(err);
       res.status(500).json({ error: err.sqlMessage, response: null });
     });
 };
 
+/**
+ * updateRecipe()
+ * Responds to request to update a recipe based on its id
+ * Also updates the directions, categories, and ingredients that are passed
+ * If needed, it will insert new categories and ingredients
+ * For simplicity it will always delete the directions and replace them
+ */
 const UPDATE_BOTH = 'UPDATE RECIPES SET Description = ?, RecipeName = ? WHERE RecipeID = ? AND RecipeAuthor = ?';
 const DELETE_DIRECTIONS = 'DELETE FROM Directions WHERE RecipeID = ?';
 const DELETE_RECIPE_TO_INGREDIENTS = 'DELETE FROM recipetoingredient WHERE RecipeID = ?';

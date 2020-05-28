@@ -1,5 +1,13 @@
+/**
+ * Favorites controller - Askew Elk
+ * Implements routes for CRUD operations on favorites table
+ */
 import { Database, cnfg } from '../db';
 
+/**
+ * getFavorites()
+ * Get all a user's favorite recipes (the brief description)
+ */
 const GET_FAVORITES = `
 SELECT r.RecipeID AS id, r.RecipeName, u.UserName AS RecipeAuthor, r.DateAdded, r.Description
 FROM favorites f
@@ -29,7 +37,10 @@ export const getFavorites = (req, res) => {
     });
 };
 
-
+/**
+ * getFavorite()
+ * get a brief description of a recipe that a user has set as a favorite
+ */
 const GET_FAVORITE = 'SELECT r.RecipeName, r.RecipeAuthor, r.DateAdded, r.Description FROM favorites f JOIN recipes r ON f.RecipeID = r.RecipeID WHERE f.UserID = ? AND r.RecipeID = ?';
 export const getFavorite = (req, res) => {
   const db = new Database(cnfg);
@@ -45,6 +56,10 @@ export const getFavorite = (req, res) => {
     });
 };
 
+/**
+ * addFavorite()
+ * add a recipe as a favorite for a user
+ */
 const ADD_FAVORITE = `INSERT INTO FAVORITES (UserID, RecipeID)
 VALUE(?, ?)`;
 export const addFavorite = (req, res) => {
@@ -62,6 +77,10 @@ export const addFavorite = (req, res) => {
     });
 };
 
+/**
+ * deleteFavorite()
+ * remove a recipe from a user's favorites
+ */
 const DELETE_FAVORITE = `DELETE FROM FAVORITES
 WHERE UserID = ?
 AND RecipeID = ?`;

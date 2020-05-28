@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 /* Third-party imports */
 import PulseLoader from 'react-spinners/PulseLoader';
@@ -18,7 +19,6 @@ class DetailedRecipe extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: '',
       RecipeName: '',
       RecipeAuthor: '',
       Rating: 0,
@@ -46,9 +46,7 @@ class DetailedRecipe extends Component {
   handleEditClick = () => {
     const { current: r } = this.props.recipe;
     this.setState({
-      id: r.id,
       RecipeName: r.RecipeName,
-      Rating: null,
       Description: r.Description,
       Categories: new Set(r.Categories),
       Ingredients: new Set(r.Ingredients),
@@ -133,34 +131,25 @@ class DetailedRecipe extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submitting!');
-    this.setState({ submitting: true });
-    this.props.updateRecipe(this.state)
-      .then((result) => {
-        console.log(result);
-        this.props.navigation.push(`/recipe/${result}`);
-      })
-      .catch((error) => {
-        this.setState({ submitting: false });
-      });
-
     this.setState({ submitting: true });
     const Directions = {};
     this.state.Instructions.forEach((i, idx) => {
       Directions[idx] = i;
     });
+    const { id } = this.props.recipe.current;
     const payload = {
+      id,
       RecipeName: this.state.RecipeName,
       Description: this.state.Description,
       Categories: Array.from(this.state.Categories),
       Ingredients: Array.from(this.state.Ingredients),
       Directions,
     };
-    this.props.createRecipe(payload)
+    this.props.updateRecipe(payload)
       .then((result) => {
-        console.log(result);
-        this.props.history.push(`/recipe/${result}`);
+        return this.props.getRecipe(this.props.match.params.id);
       })
+      .then(() => { this.setState({ isEditing: false }); })
       .catch((error) => {
         this.setState({ submitting: false });
       });
@@ -358,10 +347,10 @@ class DetailedRecipe extends Component {
         rating = (
           <StarRatings
             rating={r.Rating}
-            starRatedColor="blue"
+            starRatedColor="yellow"
             numberOfStars={5}
             name="rating"
-            starDimension="36px"
+            starDimension="30px"
             starSpacing="0px"
           />
         );
@@ -394,16 +383,18 @@ class DetailedRecipe extends Component {
         <div className="detailed-userpage">
           <SignOutButton />
           {this.renderButtonMenu()}
-          <h2>{r.RecipeName}</h2>
-          <h3>
-            {rating ? `${r.RecipeAuthor} | ` : r.RecipeAuthor}
-            {rating}
-          </h3>
-          <div className="detailed-buttons">
-            <button type="button" id="editButton" onClick={this.handleEditClick}> Edit </button>
-            <button type="button" id="deleteButton" onClick={this.handleDeleteClick}> Delete </button>
-            <button type="button" id="rateButton" onClick={this.handleRateClick}> Rate this recipe </button>
-            {this.renderRatingScale()}
+          <div className="detailed-header">
+            <div className="detailed-author">
+              <h3>{r.RecipeAuthor}</h3>
+              {rating}
+            </div>
+            <h2>{r.RecipeName}</h2>
+            <div className="detailed-buttons">
+              <button type="button" id="editButton" onClick={this.handleEditClick}> Edit </button>
+              <button type="button" id="deleteButton" onClick={this.handleDeleteClick}> Delete </button>
+              <button type="button" id="rateButton" onClick={this.handleRateClick}> Rate this recipe </button>
+              {this.renderRatingScale()}
+            </div>
           </div>
           {description}
           <div className="detailed-body">
@@ -442,4 +433,4 @@ const mapDispatchToProps = {
   deleteRecipe,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailedRecipe);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DetailedRecipe));

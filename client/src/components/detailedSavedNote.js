@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 /* Custom Imports */
 import PulseLoader from 'react-spinners/PulseLoader';
 import SignOutButton from './signOutButton';
-import { updateNote, deleteNote } from '../actions/noteApi';
+import { getNote, updateNote, deleteNote } from '../actions/noteApi';
 
 
 class DetailedSavedNote extends Component {
@@ -19,6 +19,10 @@ class DetailedSavedNote extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.getNote(this.props.match.params.id);
+  }
+
   handleBack = () => {
     this.props.history.push('/savednotes');
   };
@@ -31,12 +35,11 @@ class DetailedSavedNote extends Component {
     );
   }
 
-  handleEditClick = () => {
-    const { current: r } = this.props.note;
+  handleEditClick = (event) => {
+    const r = this.props.note.all[event.target.value];
     this.setState({
-      id: r.id,
-      Title: r.title,
-      Notes: r.notes,
+      Title: r.Title,
+      Notes: r.Notes,
       isEditing: true,
     });
   }
@@ -46,12 +49,10 @@ class DetailedSavedNote extends Component {
   }
 
   onInputTitleChange = (event) => {
-    console.log(event.target.value);
     this.setState({ Title: event.target.value });
   }
 
   onInputNotesChange = (event) => {
-    console.log(event.target.value);
     this.setState({ Notes: event.target.value });
   }
 
@@ -147,4 +148,10 @@ const mapStateToProps = (reduxState) => {
   };
 };
 
-export default connect(mapStateToProps, { updateNote, deleteNote })(DetailedSavedNote);
+const mapDispatchToProps = {
+  deleteNote,
+  getNote,
+  updateNote,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailedSavedNote);

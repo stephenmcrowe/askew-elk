@@ -19,7 +19,7 @@ class SavedNotes extends Component {
   }
 
   componentDidMount() {
-    // this.props.getNotes();
+    this.props.getNotes();
   }
 
   render() {

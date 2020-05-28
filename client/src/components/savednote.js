@@ -10,31 +10,32 @@ class SavedNote extends Component {
   };
 
   render() {
+    console.log(this.props.note.all);
     const notes = this.props.note.all.map((r) => {
-      const date = this.toDate(r.dateAdded).toDateString();
-      console.log(date);
+      const date = this.toDate(r.DateOfEntry).toDateString();
       return (
-        <div key={r.id} className="note-container">
+        <div key={`${r.RecipeID}${r.DateOfEntry}`} className="note-container">
           <div className="note-container-inner">
-            <NavLink id="deLink" to={`/savednotes/${r.id}`}>
-              <div className="frontSide">
-                <div className="noteDate-container">
-                  <h4 id="noteDate"> {date} </h4>
-                </div>
-                <div className="noteTitle-container">
-                  <h2 id="noteTitle">{r.title}</h2>
-                </div>
+            <NavLink id="deLink" to={`/savednotes/${r.RecipeID}`}>
+              {/* <div className="frontSide"> */}
+              <div>
+                <h2>{r.RecipeName}</h2>
               </div>
-              <div className="backSide">
-                <div className="noteBody-container">
-                  <h3 id="noteNotes">{r.notes}</h3>
-                </div>
+              <div className="noteDate-container">
+                <h4 id="noteDate"> {date} </h4>
               </div>
+              <div className="noteTitle-container">
+                <h4 id="noteTitle">{r.Title}</h4>
+              </div>
+              {/* </div> */}
+              {/* <div className="backSide"> */}
+              <div className="noteBody-container">
+                <h3 id="noteNotes">{r.Notes}</h3>
+              </div>
+              {/* </div> */}
             </NavLink>
           </div>
-
         </div>
-
       );
     });
     return notes;

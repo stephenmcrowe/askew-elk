@@ -398,11 +398,32 @@ html {
     margin-bottom: 0;
   }
 
-  .detailed-buttons {
+  .detailed-header {
     display: flex;
-    justify-content: center;
-    margin-top: 4vh;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
     width: 100%;
+
+    .detailed-author {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      flex: 0 1 33%;
+    }
+
+    .detailed-buttons {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      flex: 0 1 33%;
+    }
+
+    h2 {
+      flex: 0 1 33%;
+    }
   }
 
   #editButton, #deleteButton, #rateButton { // Buttons

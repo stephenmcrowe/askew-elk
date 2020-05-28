@@ -13,7 +13,7 @@ html {
     overflow-x: hidden;
   }
 
-  #signOutButton, #signInButton, #signUpButton, #addRecipeButton, #cancelButton {
+  #signOutButton, #signInButton, #signUpButton, #addRecipeButton, #cancelButton, #createButton  {
     border-radius: 10px;
     // border: none;
     border-color: #47330B;
@@ -31,19 +31,18 @@ html {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
     width: 100%;
     height: 100%;
   }
 
   .buttons-container {
-    width: 100%;
-    height: 5vh;
+    width: 20%;
+    height: 10%;
+    margin-left: 80%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-end;
-    // background-color: blue;
     margin-bottom: 2vh;
   }
 
@@ -215,6 +214,21 @@ html {
   }
 }
 
+.pageHeader {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 125px;
+
+  h2 {
+    color: #750303;
+    font-family: 'Lato', sans-serif;
+    font-size: 60px;
+  }
+}
+
 .user-area {
   display: flex;
   flex-direction: row;
@@ -225,14 +239,16 @@ html {
 }
 
 .searchBar {
-  height: 4vh;
-  width: 60%;
-  margin-top: 10vh;
-  margin-bottom: -7vh;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  height: 50px;
+  width: 70%;
+  margin-top: 50px;
 
   input {
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
     font-family: 'Lato', sans-serif;
     font-size: 1.5vw;
     // text-align: center;
@@ -241,6 +257,18 @@ html {
   input::placeholder {
     padding-left: 5px;
   }
+}
+
+#searchButton {
+  width: 8%;
+  height: 100%;
+  margin-left: 1%;
+  border-radius: 10px;
+  border-color: #47330B;
+  background-color: #47330B;
+  color: #FFB800;
+  box-shadow: black;
+  font-family: 'Lato', 'san-serif';
 }
 
 .user-container {
@@ -252,7 +280,7 @@ html {
   width: 80%;
   height: 100%;
   background-color: transparent;
-  margin-top: 10vh;
+  margin-top: 50px;
   border-radius: 1em;
   // background-color: blue;
 
@@ -355,11 +383,10 @@ html {
   padding-left: 30px;
   position: fixed;
   display: flex;
-  width: 100%;
-  z-index: -5;
+  width: 10%;
   flex-flow: column wrap;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
 
   button {
     border-radius: 10px;
@@ -367,12 +394,20 @@ html {
     background-color: #47330B;
     color: #FFB800;
     box-shadow: black;
+    width: 100px;
     margin: 20px;
     padding: 15px;
     font-family: 'Lato', 'san-serif';
     font-size: 1vw;
     z-index: 10;
   }
+}
+
+.detailed-button-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .detailed-userpage {
@@ -382,7 +417,6 @@ html {
   justify-content: center;
   align-content: flex-start;
   width: 100%;
-  height: 100vh;
 
   h2, h3, h4 {
     width: 100%;
@@ -404,13 +438,20 @@ html {
     justify-content: space-around;
     align-items: center;
     width: 100%;
+    margin-top: 50px;
+    margin-bottom: 20px;
 
     .detailed-author {
       display: flex;
-      flex-flow: row nowrap;
+      flex-flow: row wrap;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       flex: 0 1 33%;
+
+      h3 {
+        margin-top: 0;
+        width: 100%;
+      }
     }
 
     .detailed-buttons {
@@ -423,10 +464,11 @@ html {
 
     h2 {
       flex: 0 1 33%;
+      margin-top: 0;
     }
   }
 
-  #editButton, #deleteButton, #rateButton { // Buttons
+  #editButton, #deleteButton, #rateButton{ // Buttons
     border-radius: 10px;
     border-color: #47330B;
     background-color: #47330B;
@@ -439,21 +481,6 @@ html {
     z-index: 10;
   }
 
-  #rateOptionButton {
-    border-radius: 50%;
-    border: none;
-    border-color: #750303;
-    background-color: #750303;
-    box-shadow: #750303;
-    color: white;
-    font-family: 'Lato', 'san-serif';
-    font-size: 20px;
-    margin: 5px;
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
   .detailed-body {
     display: flex;
     flex-direction: row;
@@ -463,6 +490,7 @@ html {
 
     h3 {
       text-decoration: underline;
+      margin-bottom: 40px;
     }
 
     // INGREDIENTS
@@ -479,7 +507,6 @@ html {
         background-color: #750303;
         border: none;
         border-radius: 20px;
-        margin-top: 40px;
         padding: 10px;
         width: 70%;
       }
@@ -500,6 +527,7 @@ html {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+      align-content: flex-start;
       justify-content: center;
       
       button {
@@ -518,6 +546,7 @@ html {
     .detailed-directions {
       width: 80%;
       margin-top: 40px;
+      margin-bottom: 40px;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
@@ -538,6 +567,7 @@ html {
 
       .direction-container {
         color: white;
+        width: 100%;
         margin-top: 10px;
         margin-bottom: 10px;
         border-radius: 10px;
@@ -550,10 +580,19 @@ html {
 }
 
 // NewRecipe
+
+.center-container {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
 .inputs-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-self: center;
   justify-content: center;
   align-items: center;
   width: 80%;
@@ -584,21 +623,23 @@ html {
       margin: 5px 0px;
 
       span {
-        font-size: 1.5wv;
+        font-size: 1.5vw;
         font-family: 'Lato', sans-serif;
         flex: 0 1 20%;
       }
 
       input {
-        font-size: medium;
+        font-size: 16px;
         height: 30px;
         flex: 1 1 auto;
+        font-family: 'Lato', sans-serif;
       }
 
       textarea {
         flex: 1 1 auto;
-        font-size: small;
-        height: 100%;
+        font-size: 16px;
+        height: 100px;
+        font-family: 'Lato', sans-serif;
       }
     }
 
@@ -687,6 +728,20 @@ html {
   font-size: 5vw;
   margin-top: 10vh;
   color: white;
+}
+
+.createButtonContainer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  height: 50px;
+  margin-top: 50px;
+  margin-right: 1%;
+
+  #createButton {
+    margin: 0;
+    padding: 5px;
+  }
 }
 
   // New Saved Notes

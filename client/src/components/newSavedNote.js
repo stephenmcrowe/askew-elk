@@ -26,14 +26,20 @@ class NewSavedNote extends Component {
     this.setState({ Notes: event.target.value });
   }
 
+  // STEPHEN
   handleSubmit = (event) => {
     event.preventDefault();
     console.log('submitting!');
     this.setState({ submitting: true });
-    this.props.createNote(this.state)
+    const payload = {
+      id: this.state.id,
+      Title: this.state.Title,
+      Notes: this.state.Notes,
+    };
+    this.props.createNote(payload)
       .then((result) => {
         console.log(result);
-        this.props.navigation.push(`/savednotes/${result}`);
+        this.props.history.push(`/savednotes/${result}`);
       })
       .catch((error) => {
         this.setState({ submitting: false });
@@ -44,19 +50,32 @@ class NewSavedNote extends Component {
     return (<PulseLoader />);
   }
 
+  handleBack = () => {
+    this.props.history.goBack();
+    // this.props.history.push('/savednotes');
+  };
+
   // eslint-disable-next-line consistent-return
   renderSwitch = () => {
     if (this.state.submitting) {
       return (<PulseLoader />);
     } else {
       return (
-        <button
-          type="button"
-          onClick={this.handleSubmit}
-          id="addRecipeButton"
-        >
-          Add Note
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={this.handleSubmit}
+            id="addRecipeButton"
+          >
+            Add Note
+          </button>
+          <button
+            type="button"
+            onClick={this.handleBack}
+            id="cancelButton"
+          >Cancel
+          </button>
+        </>
       );
     }
   }
@@ -65,25 +84,13 @@ class NewSavedNote extends Component {
   //     console.log(this.state);
   //   }
 
-  handleBack = () => {
-    this.props.history.push('/savednotes');
-  };
-
-  backButton = () => {
-    return (
-      <div className="backButtonContainer">
-        <button type="button" onClick={this.handleBack}> Back </button>
-      </div>
-    );
-  }
 
   render() {
     return (
-      <>
-        {this.backButton()}
+      <div className="center-container">
         <div className="notes-inputs-container">
           <div className="formTitle">
-            Add some notes!
+            Create note
           </div>
           <form>
             <label htmlFor="noteTitle">
@@ -108,7 +115,7 @@ class NewSavedNote extends Component {
           {this.renderSwitch()}
           {/* <button type="button" onClick={this.log}>Log</button> */}
         </div>
-      </>
+      </div>
     );
   }
 }

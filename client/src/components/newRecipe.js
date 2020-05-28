@@ -86,18 +86,31 @@ class NewRecipe extends Component {
       });
   }
 
+  handleBack = () => {
+    this.props.history.goBack();
+    // this.props.history.push('/browse/yourrecipes');
+  };
+
   renderSwitch = () => {
     if (this.state.submitting) {
       return (<PulseLoader />);
     }
     return (
-      <button
-        type="button"
-        onClick={this.handleSubmit}
-        id="addRecipeButton"
-      >
-        Add Recipe
-      </button>
+      <>
+        <button
+          type="button"
+          onClick={this.handleSubmit}
+          id="addRecipeButton"
+        >
+          Add Recipe
+        </button>
+        <button
+          type="button"
+          onClick={this.handleBack}
+          id="cancelButton"
+        >Cancel
+        </button>
+      </>
     );
   }
 
@@ -162,97 +175,99 @@ class NewRecipe extends Component {
 
   render() {
     return (
-      <div className="inputs-container">
-        <div className="formTitle">
-          Add your own recipe!
+      <div className="center-container">
+        <div className="inputs-container">
+          <div className="formTitle">
+            Add your own recipe!
+          </div>
+          <form>
+            <div className="recipe-input">
+              <span>Recipe Name</span>
+              <input
+                type="text"
+                name="recipeName"
+                onChange={this.onInputRecipeNameChange}
+                value={this.state.RecipeName}
+              />
+            </div>
+            <div className="recipe-input">
+              <span>Recipe Description</span>
+              <input
+                type="text"
+                name="description"
+                onChange={this.onInputDescriptionChange}
+                value={this.state.Description}
+              />
+            </div>
+            <div className="recipe-input">
+              <span>Recipe Categories</span>
+              <input
+                type="text"
+                name="categories"
+                onChange={this.onInputCategoryChange}
+                placeholder={'e.g. "Seafood"'}
+                value={this.state.category}
+              />
+              <button
+                type="button"
+                onClick={this.onSubmitCategory}
+                id="categorySubmitButton"
+              >
+                +
+              </button>
+            </div>
+            <div className="inputted">
+              {this.renderCategories()}
+            </div>
+            <div className="recipe-input">
+              <span>Recipe Ingredients</span>
+              <input
+                type="text"
+                name="ingredients"
+                onChange={this.onInputIngredientChange}
+                placeholder={'e.g. "1 cup of white flour"'}
+                value={this.state.ingredient}
+              />
+              <button
+                type="button"
+                onClick={this.onSubmitIngredient}
+                id="ingredientSubmitButton"
+              >
+                +
+              </button>
+            </div>
+            <div className="inputted">
+              {this.renderIngredients()}
+            </div>
+            <div className="recipe-input">
+              <span>Recipe Instructions</span>
+              <textarea
+                type="text"
+                name="instructions"
+                onChange={this.onInputInstructionChange}
+                placeholder={'e.g. "Cut the potato into bite-sized cubes"'}
+                value={this.state.instruction}
+              />
+              <button
+                type="button"
+                onClick={this.onSubmitInstruction}
+                id="instructionSubmitButton"
+              >
+                +
+              </button>
+            </div>
+            <div className="inputted">
+              <Instructions
+                stateKey="Instructions"
+                onButtonInsDelete={this.onButtonInsDelete}
+                reorderItem={this.reorderItem}
+                Instructions={this.state.Instructions}
+              />
+            </div>
+          </form>
+          {this.renderSwitch()}
+          <button type="button" onClick={this.log}>Log</button>
         </div>
-        <form>
-          <div className="recipe-input">
-            <span>Recipe Name</span>
-            <input
-              type="text"
-              name="recipeName"
-              onChange={this.onInputRecipeNameChange}
-              value={this.state.RecipeName}
-            />
-          </div>
-          <div className="recipe-input">
-            <span>Recipe Description</span>
-            <textarea
-              type="text"
-              name="description"
-              onChange={this.onInputDescriptionChange}
-              value={this.state.Description}
-            />
-          </div>
-          <div className="recipe-input">
-            <span>Recipe Categories</span>
-            <input
-              type="text"
-              name="categories"
-              onChange={this.onInputCategoryChange}
-              placeholder={'e.g. "Seafood"'}
-              value={this.state.category}
-            />
-            <button
-              type="button"
-              onClick={this.onSubmitCategory}
-              id="categorySubmitButton"
-            >
-              +
-            </button>
-          </div>
-          <div className="inputted">
-            {this.renderCategories()}
-          </div>
-          <div className="recipe-input">
-            <span>Recipe Ingredients</span>
-            <input
-              type="text"
-              name="ingredients"
-              onChange={this.onInputIngredientChange}
-              placeholder={'e.g. "1 cup of white flour"'}
-              value={this.state.ingredient}
-            />
-            <button
-              type="button"
-              onClick={this.onSubmitIngredient}
-              id="ingredientSubmitButton"
-            >
-              +
-            </button>
-          </div>
-          <div className="inputted">
-            {this.renderIngredients()}
-          </div>
-          <div className="recipe-input">
-            <span>Recipe Instructions</span>
-            <textarea
-              type="text"
-              name="instructions"
-              onChange={this.onInputInstructionChange}
-              placeholder={'e.g. "Cut the potato into bite-sized cubes"'}
-              value={this.state.instruction}
-            />
-            <button
-              type="button"
-              onClick={this.onSubmitInstruction}
-              id="instructionSubmitButton"
-            >
-              +
-            </button>
-          </div>
-          <div className="inputted">
-            <Instructions
-              stateKey="Instructions"
-              onButtonInsDelete={this.onButtonInsDelete}
-              reorderItem={this.reorderItem}
-              Instructions={this.state.Instructions}
-            />
-          </div>
-        </form>
-        {this.renderSwitch()}
-        <button type="button" onClick={this.log}>Log</button>
       </div>
     );
   }

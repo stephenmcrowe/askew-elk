@@ -22,14 +22,22 @@ class SavedNotes extends Component {
     this.props.getNotes();
   }
 
+  handleCreateNote = () => {
+    this.props.history.push('/savednotes/create');
+  }
+
   render() {
     return (
       <div className="userpage">
         <SideBar />
         <div className="user-area">
           <SignOutButton />
-          <div className="savednotes-title">
-            Your Notes
+
+          <div className="pageHeader">
+            <h2>Your Notes</h2>
+          </div>
+          <div className="createButtonContainer">
+            <button type="button" id="createButton" onClick={this.handleCreateNote}>Create Note</button>
           </div>
           <SearchBar pathname={this.props.location.pathname} />
           <div className="user-container">

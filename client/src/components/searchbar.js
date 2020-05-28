@@ -27,8 +27,8 @@ class SearchBar extends Component {
           onChange={this.onInputSearchChange}
           value={this.state.searchterm}
         />
-        <button type="button" onClick={this.log}>Log</button>
-        <button type="button" onClick={this.handleSearch}>Search</button>
+        {/* <button type="button" onClick={this.log}>Log</button> */}
+        <button type="button" id="searchButton" onClick={this.handleSearch}>Search</button>
       </div>
     );
   }

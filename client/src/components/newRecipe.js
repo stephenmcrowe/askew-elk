@@ -12,7 +12,6 @@ class NewRecipe extends Component {
 
     this.state = {
       RecipeName: '',
-      RecipeAuthor: '',
       Description: '',
       category: '',
       Categories: new Set(),
@@ -25,13 +24,7 @@ class NewRecipe extends Component {
   }
 
   onInputRecipeNameChange = (event) => {
-    console.log(event.target.value);
     this.setState({ RecipeName: event.target.value });
-  }
-
-  onInputRecipeAuthorChange = (event) => {
-    console.log(event.target.value);
-    this.setState({ RecipeAuthor: event.target.value });
   }
 
   onInputDescriptionChange = (event) => {
@@ -72,18 +65,21 @@ class NewRecipe extends Component {
     event.preventDefault();
     console.log('submitting!');
     this.setState({ submitting: true });
+    const Directions = {};
+    this.state.Instructions.forEach((i, idx) => {
+      Directions[idx] = i;
+    });
     const payload = {
       RecipeName: this.state.RecipeName,
-      RecipeAuthor: this.state.RecipeAuthor,
       Description: this.state.Description,
-      Categories: this.state.Categories.values(),
-      Ingredients: this.state.Ingredients.values(),
-      Instructions: this.state.Instructions.values(),
+      Categories: Array.from(this.state.Categories),
+      Ingredients: Array.from(this.state.Ingredients),
+      Directions,
     };
     this.props.createRecipe(payload)
       .then((result) => {
         console.log(result);
-        this.props.navigation.push(`/recipe/${result}`);
+        this.props.history.push(`/recipe/${result}`);
       })
       .catch((error) => {
         this.setState({ submitting: false });
@@ -160,22 +156,6 @@ class NewRecipe extends Component {
     return render;
   }
 
-  renderInstructions = () => {
-    const render = [];
-    this.state.Instructions.forEach((i, idx) => {
-      render.push(
-        <button
-          className="inputtedInstruction"
-          key={i}
-          onClick={() => this.onButtonInsDelete('Instructions', idx)}
-          type="button"
-        >{`${idx + 1}: ${i}`}
-        </button>,
-      );
-    });
-    return render;
-  }
-
   log = () => {
     console.log(this.state);
   }
@@ -187,43 +167,26 @@ class NewRecipe extends Component {
           Add your own recipe!
         </div>
         <form>
-          <label htmlFor="recipeName">
-            Recipe Name
+          <div className="recipe-input">
+            <span>Recipe Name</span>
             <input
               type="text"
               name="recipeName"
               onChange={this.onInputRecipeNameChange}
               value={this.state.RecipeName}
             />
-          </label>
-          <label htmlFor="recipeAuthor">
-            Recipe Author
-            <input
-              type="text"
-              name="recipeAuthor"
-              onChange={this.onInputRecipeAuthorChange}
-              value={this.state.RecipeAuthor}
-            />
-          </label>
-          <label htmlFor="recipeDescription">
-            Recipe Description
+          </div>
+          <div className="recipe-input">
+            <span>Recipe Description</span>
             <textarea
               type="text"
               name="description"
               onChange={this.onInputDescriptionChange}
               value={this.state.Description}
             />
-          </label>
-          <label htmlFor="recipeCategories">
-            Recipe Categories
-            <button
-              type="button"
-              onClick={this.onSubmitCategory}
-              id="categorySubmitButton"
-            >
-              +
-            </button>
-            {/* <span id="exampleText">(&quot;Seafood&quot;)</span> */}
+          </div>
+          <div className="recipe-input">
+            <span>Recipe Categories</span>
             <input
               type="text"
               name="categories"
@@ -231,20 +194,19 @@ class NewRecipe extends Component {
               placeholder={'e.g. "Seafood"'}
               value={this.state.category}
             />
-          </label>
-          <div className="inputed">
-            {this.renderCategories()}
-          </div>
-          <label htmlFor="recipeIngredients">
-            Recipe Ingredients
             <button
               type="button"
-              onClick={this.onSubmitIngredient}
-              id="ingredientSubmitButton"
+              onClick={this.onSubmitCategory}
+              id="categorySubmitButton"
             >
               +
             </button>
-            {/* <span id="exampleText">(&quot;1 cup of white flour&quot;)</span> */}
+          </div>
+          <div className="inputted">
+            {this.renderCategories()}
+          </div>
+          <div className="recipe-input">
+            <span>Recipe Ingredients</span>
             <input
               type="text"
               name="ingredients"
@@ -252,20 +214,19 @@ class NewRecipe extends Component {
               placeholder={'e.g. "1 cup of white flour"'}
               value={this.state.ingredient}
             />
-          </label>
-          <div className="inputted">
-            {this.renderIngredients()}
-          </div>
-          <label htmlFor="recipeInstructions">
-            Recipe Instructions
             <button
               type="button"
-              onClick={this.onSubmitInstruction}
-              id="instructionSubmitButton"
+              onClick={this.onSubmitIngredient}
+              id="ingredientSubmitButton"
             >
               +
             </button>
-            {/* <span id="exampleText">(&quot;Cut the potato into bite-sized cubes&quot;)</span> */}
+          </div>
+          <div className="inputted">
+            {this.renderIngredients()}
+          </div>
+          <div className="recipe-input">
+            <span>Recipe Instructions</span>
             <textarea
               type="text"
               name="instructions"
@@ -273,9 +234,15 @@ class NewRecipe extends Component {
               placeholder={'e.g. "Cut the potato into bite-sized cubes"'}
               value={this.state.instruction}
             />
-          </label>
+            <button
+              type="button"
+              onClick={this.onSubmitInstruction}
+              id="instructionSubmitButton"
+            >
+              +
+            </button>
+          </div>
           <div className="inputted">
-            {/* {this.renderInstructions()} */}
             <Instructions
               stateKey="Instructions"
               onButtonInsDelete={this.onButtonInsDelete}

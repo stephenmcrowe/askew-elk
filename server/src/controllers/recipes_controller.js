@@ -46,7 +46,11 @@ export const getRecipe = (req, res) => {
     return db.query(SELECT_ONE, req.params.id);
   })
     .then((result) => {
-      res.status(200).json({ error: null, response: result[0] });
+      const recipe = result[0];
+      recipe.Categories = recipe.Categories.split('|');
+      recipe.Ingredients = recipe.Ingredients.split('|');
+      recipe.Directions = recipe.Directions.split('|');
+      res.status(200).json({ error: null, response: recipe });
     })
     .catch((err) => {
       console.log(err);
@@ -54,10 +58,11 @@ export const getRecipe = (req, res) => {
     });
 };
 
-const SELECT_ALL = `SELECT RecipeName, RecipeAuthor, Rating, DateAdded
- FROM Recipes`;
+const SELECT_ALL = `
+SELECT RecipeID as id, RecipeName, RecipeAuthor, Rating, DateAdded, Description
+FROM Recipes`;
 const SELECT_WHERE = `${SELECT_ALL}
- WHERE ?`;
+WHERE ?`;
 // export const getRecipes = (req, res) => {
 //   let query = [];
 
@@ -429,4 +434,3 @@ export const updateRecipe = (req, res) => {
       });
   }
 };
-

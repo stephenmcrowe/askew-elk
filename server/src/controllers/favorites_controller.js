@@ -1,8 +1,8 @@
 import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
-const GET_FAVORITES = 
-`SELECT r.RecipeName, r.RecipeAuthor, r.DateAdded, r.Description
+const GET_FAVORITES = `
+SELECT r.RecipeName, r.RecipeAuthor, r.DateAdded, r.Description
 FROM favorites f
 JOIN recipes r ON f.RecipeID = r.RecipeID
 WHERE UserID = ?`;
@@ -11,8 +11,8 @@ export const getFavorites = (req, res) => {
   // let params = [];
   let query = GET_FAVORITES;
   // params.push(req.user.userID);
-  if('RecipeName' in req.body) {
-    query = `${GET_FAVORITES} AND RecipeName LIKE '%${req.body.RecipeName}%'`;
+  if ('RecipeName' in req.body) {
+    query = `${GET_FAVORITES} AND RecipeName LIKE '${req.body.RecipeName}%'`;
     // params.push(req.body.RecipeName);
   }
 
@@ -44,8 +44,7 @@ export const getFavorite = (req, res) => {
     });
 };
 
-const ADD_FAVORITE =
-`INSERT INTO FAVORITES (UserID, RecipeID)
+const ADD_FAVORITE = `INSERT INTO FAVORITES (UserID, RecipeID)
 VALUE(?, ?)`;
 export const addFavorite = (req, res) => {
   const db = new Database(cnfg);
@@ -62,8 +61,7 @@ export const addFavorite = (req, res) => {
     });
 };
 
-const DELETE_FAVORITE = 
-`DELETE FROM FAVORITES
+const DELETE_FAVORITE = `DELETE FROM FAVORITES
 WHERE UserID = ?
 AND RecipeID = ?`;
 export const deleteFavorite = (req, res) => {

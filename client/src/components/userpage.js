@@ -40,7 +40,7 @@ class UserPage extends Component {
         case '/browse/yourrecipes':
           this.props.getRecipes({
             RecipeName: searchterm,
-            Username: this.props.user.username,
+            byUser: true,
           })
             .then(() => { this.setState({ loading: false }); });
           break;
@@ -61,7 +61,7 @@ class UserPage extends Component {
             .then(() => { this.setState({ loading: false }); });
           break;
         case '/browse/yourrecipes':
-          this.props.getRecipes({ Username: this.props.user.username })
+          this.props.getRecipes({ byUser: true })
             .then(() => { this.setState({ loading: false }); });
           break;
         case '/browse/favorites':

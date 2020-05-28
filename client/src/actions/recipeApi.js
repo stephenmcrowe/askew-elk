@@ -91,6 +91,7 @@ export function createRecipe(recipe) {
       const url = `${ROOT_URL}/recipes`;
       console.log(`POST: ${url}`);
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      console.log(recipe);
       axios.post(url, recipe, { headers })
         .then((resp) => {
           const { response } = resp.data;

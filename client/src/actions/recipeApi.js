@@ -59,7 +59,6 @@ export function getFavorites(params) {
       const url = `${ROOT_URL}/favorites`;
       console.log(`GET: ${url}`);
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
-      console.log(params);
       axios.get(url, { params, headers })
         .then((resp) => {
           const { response } = resp.data;
@@ -92,7 +91,6 @@ export function createRecipe(recipe) {
       const url = `${ROOT_URL}/recipes`;
       console.log(`POST: ${url}`);
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
-      console.log(recipe);
       axios.post(url, recipe, { headers })
         .then((resp) => {
           const { response } = resp.data;

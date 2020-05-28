@@ -1,12 +1,11 @@
-import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
-const SELECT_BY_RECIPE_AND_USER = 'SELECT Title, Notes FROM history WHERE RecipeID = ? AND UserID = ? AND DateOfEntry = ?';
+const SELECT_BY_RECIPE_AND_USER = 'SELECT r.RecipeName, h.Title, h.Notes FROM history h JOIN recipes r ON h.RecipeID = r.RecipeID WHERE h.RecipeID = ? AND h.UserID = ?';
 export const getHistory = (req, res) => {
   const db = new Database(cnfg);
-  db.query(SELECT_BY_RECIPE_AND_USER, [req.params.id, req.user.userID, req.body.DateOfEntry])
+  db.query(SELECT_BY_RECIPE_AND_USER, [req.params.id, req.user.userID])
     .then((result) => {
-      res.status(200).json({ error: null, response: result[0] });
+      res.status(200).json({ error: null, response: result });
       return db.close();
     })
     .catch((err) => {
@@ -16,7 +15,7 @@ export const getHistory = (req, res) => {
     });
 };
 
-const SELECT_BY_USER = 'SELECT RecipeID, DateOfEntry, Title, Notes FROM history WHERE UserID = ?';
+const SELECT_BY_USER = 'SELECT h.RecipeID, h.DateOfEntry, r.RecipeName, h.Title, h.Notes FROM history h JOIN recipes r ON h.RecipeID = r.RecipeID WHERE h.UserID = ?';
 export const getHistories = (req, res) => {
   const db = new Database(cnfg);
   db.query(SELECT_BY_USER, req.user.userID)

@@ -1,18 +1,19 @@
-import mysql from 'mysql';
 import { Database, cnfg } from '../db';
 
 const GET_FAVORITES = `
-SELECT r.RecipeName, r.RecipeAuthor, r.DateAdded, r.Description
+SELECT r.RecipeID AS id, r.RecipeName, u.UserName AS RecipeAuthor, r.DateAdded, r.Description
 FROM favorites f
 JOIN recipes r ON f.RecipeID = r.RecipeID
-WHERE UserID = ?`;
+JOIN Users u ON r.RecipeAuthor = u.UserID
+WHERE u.UserID = ?`;
 export const getFavorites = (req, res) => {
   const db = new Database(cnfg);
   // let params = [];
   let query = GET_FAVORITES;
   // params.push(req.user.userID);
-  if ('RecipeName' in req.body) {
-    query = `${GET_FAVORITES} AND RecipeName LIKE '${req.body.RecipeName}%'`;
+  if ('RecipeName' in req.query) {
+    console.log('executed the filter block');
+    query = `${GET_FAVORITES} AND RecipeName LIKE '%${req.query.RecipeName}%'`;
     // params.push(req.body.RecipeName);
   }
 

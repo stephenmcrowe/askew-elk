@@ -9,7 +9,6 @@ export function getNote(recipeId) {
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
       axios.get(url, { headers })
         .then((resp) => {
-          console.log(resp);
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
           resolve(response);

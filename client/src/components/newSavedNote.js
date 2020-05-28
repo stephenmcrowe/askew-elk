@@ -17,19 +17,16 @@ class NewSavedNote extends Component {
   }
 
   onInputTitleChange = (event) => {
-    console.log(event.target.value);
     this.setState({ Title: event.target.value });
   }
 
   onInputNotesChange = (event) => {
-    console.log(event.target.value);
     this.setState({ Notes: event.target.value });
   }
 
   // STEPHEN
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submitting!');
     this.setState({ submitting: true });
     const payload = {
       id: this.state.id,
@@ -38,7 +35,6 @@ class NewSavedNote extends Component {
     };
     this.props.createNote(payload)
       .then((result) => {
-        console.log(result);
         this.props.history.push(`/savednotes/${result}`);
       })
       .catch((error) => {

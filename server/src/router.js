@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import * as Employees from './controllers/employee_controller';
 import signin, { signup } from './controllers/auth_controller';
 import { requireAuth, requireSignin } from './utils/passport';
 
@@ -21,25 +20,14 @@ router.get('/', (req, res) => {
 router.post('/signin', requireSignin, signin);
 router.post('/signup', signup);
 
-router.route('/employees')
-  .get(requireAuth, Employees.getEmployees)
-  .post(Employees.createEmployee);
-
-router.route('/employees/:id')
-  .get(requireAuth, Employees.getEmployee)
-  .put(requireAuth, Employees.updateEmployee)
-  .delete(requireAuth, Employees.deleteEmployee);
-
 router.route('/recipe/:id')
-  .get(Recipes.getRecipe)
+  .get(requireAuth, Recipes.getRecipe)
   .delete(requireAuth, Recipes.deleteRecipe)
   .put(requireAuth, Recipes.updateRecipe);
 
-
 router.route('/recipes')
-  .get(Recipes.getRecipes)
+  .get(requireAuth, Recipes.getRecipes)
   .post(requireAuth, Recipes.addRecipe);
-
 
 router.route('/user/:id')
   .get(Users.getUser)

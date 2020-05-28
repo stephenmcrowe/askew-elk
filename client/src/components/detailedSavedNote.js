@@ -58,11 +58,9 @@ class DetailedSavedNote extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submitting!');
     this.setState({ submitting: true });
     this.props.updateNote(this.state)
       .then((result) => {
-        console.log(result);
         this.props.navigation.push(`/savednotes/${result}`);
       })
       .catch((error) => {

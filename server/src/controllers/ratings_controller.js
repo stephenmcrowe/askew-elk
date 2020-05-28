@@ -27,7 +27,6 @@ const UPDATE_AVERAGE_RATING = 'UPDATE recipes SET Rating = (SELECT AVG(Rating) F
 
 export const addRating = (req, res) => {
   const db = new Database(cnfg);
-  console.log('starting transaction');
   db.createTransaction(() => {
     return db.query(ADD_RATING, [req.body.RecipeID, req.user.userID, req.body.Rating])
       .then(() => {
@@ -38,7 +37,6 @@ export const addRating = (req, res) => {
       });
   })
     .then((result) => {
-      console.log(result);
       res.status(200).json({ error: null, response: 'success' });
     })
     .catch((err) => {
@@ -51,7 +49,6 @@ export const addRating = (req, res) => {
 const UPDATE_RATING = 'UPDATE rates SET Rating = ? WHERE UserID = ? AND RecipeID = ?';
 export const updateRating = (req, res) => {
   const db = new Database(cnfg);
-  console.log('starting transaction');
   db.createTransaction(() => {
     return db.query(UPDATE_RATING, [req.body.Rating, req.user.userID, req.body.RecipeID])
       .then(() => {
@@ -62,7 +59,6 @@ export const updateRating = (req, res) => {
       });
   })
     .then((result) => {
-      console.log(result);
       res.status(200).json({ error: null, response: 'success' });
     })
     .catch((err) => {
@@ -74,7 +70,6 @@ export const updateRating = (req, res) => {
 const DELETE_RATING = 'DELETE FROM rates WHERE UserID = ? AND RecipeID = ?';
 export const deleteRating = (req, res) => {
   const db = new Database(cnfg);
-  console.log('starting transaction');
   db.createTransaction(() => {
     return db.query(DELETE_RATING, [req.user.userID, req.body.RecipeID])
       .then(() => {
@@ -85,7 +80,6 @@ export const deleteRating = (req, res) => {
       });
   })
     .then((result) => {
-      console.log(result);
       res.status(200).json({ error: null, response: 'success' });
     })
     .catch((err) => {

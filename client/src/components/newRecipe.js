@@ -63,7 +63,6 @@ class NewRecipe extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submitting!');
     this.setState({ submitting: true });
     const Directions = {};
     this.state.Instructions.forEach((i, idx) => {
@@ -78,7 +77,6 @@ class NewRecipe extends Component {
     };
     this.props.createRecipe(payload)
       .then((result) => {
-        console.log(result);
         this.props.history.push(`/recipe/${result}`);
       })
       .catch((error) => {

@@ -107,7 +107,6 @@ class DetailedRecipe extends Component {
   }
 
   onInputInstructionChange = (event) => {
-    console.log(event.target.value);
     this.setState({ instruction: event.target.value });
   }
 
@@ -118,9 +117,6 @@ class DetailedRecipe extends Component {
   }
 
   onButtonDelete = (stateKey, toFind) => {
-    console.log(stateKey);
-    console.log(toFind);
-    console.log(this.state[stateKey]);
     this.setState((prevState) => {
       prevState[stateKey].delete(toFind);
       return { [stateKey]: prevState[stateKey] };
@@ -370,7 +366,6 @@ class DetailedRecipe extends Component {
       let directions = null;
       if (r.Directions) {
         directions = r.Directions.map((d, idx) => {
-          console.log(typeof (d));
           return <div className="direction-container" key={hashCode(d)}> <span id="stepText">Step {`${idx + 1}:`} </span> {`${d}`}</div>;
         });
       }

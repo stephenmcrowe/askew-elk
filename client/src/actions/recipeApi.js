@@ -127,7 +127,7 @@ export function updateRecipe(recipe) {
 export function deleteRecipe(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipes/${id}`;
+      const url = `${ROOT_URL}/recipe/${id}`;
       console.log(`DELETE: ${url}`);
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
       axios.delete(url, { headers })

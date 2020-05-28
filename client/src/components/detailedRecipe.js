@@ -61,7 +61,8 @@ class DetailedRecipe extends Component {
   }
 
   handleDeleteClick = () => {
-    this.props.deleteRecipe(this.props.recipe.id, this.props.history);
+    this.props.deleteRecipe(this.props.match.params.id)
+      .then(() => this.props.history.push('/browse'));
   }
 
   onRateButtonClick = () => {
@@ -130,6 +131,15 @@ class DetailedRecipe extends Component {
     });
   }
 
+  reorderItem = (stateKey, currPos, nextPos) => {
+    this.setState((prevState) => {
+      const ele = this.state[stateKey][currPos];
+      prevState[stateKey].splice(currPos, 1);
+      prevState[stateKey].splice(nextPos, 0, ele);
+      return { [stateKey]: prevState[stateKey] };
+    });
+  }
+
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ submitting: true });
@@ -150,7 +160,7 @@ class DetailedRecipe extends Component {
       .then((result) => {
         return this.props.getRecipe(this.props.match.params.id);
       })
-      .then(() => { this.setState({ isEditing: false }); })
+      .then(() => { this.setState({ isEditing: false, submitting: false }); })
       .catch((error) => {
         this.setState({ submitting: false });
       });

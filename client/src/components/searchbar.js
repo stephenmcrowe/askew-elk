@@ -11,6 +11,10 @@ class SearchBar extends Component {
     this.props.search(this.props.pathname, this.state.searchterm);
   }
 
+  handleCreateRecipe = () => {
+    this.props.history.push('/recipe/create');
+  }
+
   onInputSearchChange = (event) => {
     this.setState({ searchterm: event.target.value });
   }
@@ -18,12 +22,13 @@ class SearchBar extends Component {
   render() {
     return (
       <div className="searchBar">
+        <button type="button" onClick={this.handleCreateRecipe} className="default-button search-button">Create Recipe</button>
         <input
           placeholder="Search..."
           onChange={this.onInputSearchChange}
           value={this.state.searchterm}
         />
-        <button type="button" id="searchButton" onClick={this.handleSearch}>Search</button>
+        <button type="button" className="default-button search-button" onClick={this.handleSearch}>Search</button>
       </div>
     );
   }

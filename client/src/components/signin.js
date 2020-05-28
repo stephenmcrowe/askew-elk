@@ -46,7 +46,7 @@ class SignIn extends Component {
             value={this.state.password}
           />
         </form>
-        <button type="button" onClick={this.handleSubmit}>Sign In</button>
+        <button className="default-button form-button" type="button" onClick={this.handleSubmit}>Sign In</button>
       </div>
     );
   }

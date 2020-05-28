@@ -2,7 +2,6 @@ import { ActionTypes } from '../actions';
 
 const initialState = {
   all: [],
-  current: {},
 };
 
 const NoteReducer = (state = initialState, action) => {

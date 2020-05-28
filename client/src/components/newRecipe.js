@@ -98,14 +98,14 @@ class NewRecipe extends Component {
         <button
           type="button"
           onClick={this.handleSubmit}
-          id="addRecipeButton"
+          className="default-button form-button"
         >
           Add Recipe
         </button>
         <button
           type="button"
           onClick={this.handleBack}
-          id="cancelButton"
+          className="default-button form-button"
         >Cancel
         </button>
       </>
@@ -209,7 +209,7 @@ class NewRecipe extends Component {
               <button
                 type="button"
                 onClick={this.onSubmitCategory}
-                id="categorySubmitButton"
+                className="default-button"
               >
                 +
               </button>
@@ -229,7 +229,7 @@ class NewRecipe extends Component {
               <button
                 type="button"
                 onClick={this.onSubmitIngredient}
-                id="ingredientSubmitButton"
+                className="default-button"
               >
                 +
               </button>
@@ -249,7 +249,7 @@ class NewRecipe extends Component {
               <button
                 type="button"
                 onClick={this.onSubmitInstruction}
-                id="instructionSubmitButton"
+                className="default-button"
               >
                 +
               </button>
@@ -264,7 +264,7 @@ class NewRecipe extends Component {
             </div>
           </form>
           {this.renderSwitch()}
-          <button type="button" onClick={this.log}>Log</button>
+          {/* <button type="button" onClick={this.log}>Log</button> */}
         </div>
       </div>
     );

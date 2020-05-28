@@ -29,10 +29,6 @@ class UserPage extends Component {
     this.search(this.props.location.pathname, null);
   }
 
-  handleCreateRecipe = () => {
-    this.props.history.push('/recipe/create');
-  }
-
   search = (pathname, searchterm) => {
     this.setState({ loading: true });
     if (searchterm) {
@@ -111,10 +107,11 @@ class UserPage extends Component {
         <div className="pageHeader">
           {this.renderTitle()}
         </div>
-        <div className="createButtonContainer">
-          <button type="button" id="createButton" onClick={this.handleCreateRecipe}>Create Recipe</button>
-        </div>
-        <SearchBar search={this.search} pathname={this.props.location.pathname} />
+        <SearchBar
+          history={this.props.history}
+          search={this.search}
+          pathname={this.props.location.pathname}
+        />
         <div className="user-container">
           <Recipe />
         </div>
@@ -127,7 +124,9 @@ class UserPage extends Component {
       <div className="userpage">
         <SideBar search={this.search} />
         <div className="user-area">
-          <SignOutButton />
+          <div className="buttons-container">
+            <SignOutButton />
+          </div>
           {this.renderContent()}
         </div>
       </div>

@@ -7,12 +7,17 @@ import PulseLoader from 'react-spinners/PulseLoader';
 import StarRatings from 'react-star-ratings';
 
 /* Custom Imports */
-import hashCode from './utils';
+import { hashCode, toDate } from './utils';
 import SignOutButton from './signOutButton';
 import Instructions from './instructions';
 
 /* Redux Imports */
-import { deleteRecipe, getRecipe, updateRecipe } from '../actions/recipeApi';
+import {
+  deleteRecipe,
+  getRecipe,
+  updateRecipe,
+} from '../actions/recipeApi';
+import { getNote, resetNotes } from '../actions/noteApi';
 
 
 class DetailedRecipe extends Component {
@@ -30,13 +35,22 @@ class DetailedRecipe extends Component {
       instruction: '',
       Instructions: [],
       isEditing: false,
+      loading: true,
       submitting: false,
       showRatingScale: false,
     };
   }
 
   componentDidMount() {
-    this.props.getRecipe(this.props.match.params.id);
+    this.props.getRecipe(this.props.match.params.id)
+      .then(() => {
+        return this.props.getNote(this.props.match.params.id);
+      })
+      .then(() => this.setState({ loading: false }));
+  }
+
+  componentWillUnmount() {
+    this.props.resetNotes();
   }
 
   handleBack = () => {
@@ -46,6 +60,11 @@ class DetailedRecipe extends Component {
   handleFavorite = () => {
     // NEED TO DO -- HELP ME STEPHEN
     this.props.history.goBack();
+  }
+
+  handleCreateNote = () => {
+    // NEED TO DO -- HELP ME STEPHEN
+    this.props.history.push('/savednotes/create');
   }
 
   handleEditClick = () => {
@@ -166,15 +185,6 @@ class DetailedRecipe extends Component {
       });
   }
 
-  renderButtonMenu = () => {
-    return (
-      <div className="backButtonContainer">
-        <button type="button" onClick={this.handleBack}>Back</button>
-        <button type="button" onClick={this.handleFavorite}>Favorite</button>
-      </div>
-    );
-  }
-
   renderRatingScale = () => {
     if (this.state.showRatingScale) {
       return (
@@ -205,14 +215,14 @@ class DetailedRecipe extends Component {
           <button
             type="button"
             onClick={this.handleSubmit}
-            id="addRecipeButton"
+            className="default-button form-button"
           >
             Update Recipe
           </button>
           <button
             type="button"
             onClick={() => this.setState({ isEditing: false })}
-            id="cancelButton"
+            className="default-button form-button"
           >Cancel
           </button>
         </>
@@ -257,7 +267,7 @@ class DetailedRecipe extends Component {
       <div className="center-container">
         <div className="inputs-container">
           <div className="formTitle">
-            Add your own recipe!
+            Edit your recipe!
           </div>
           <form>
             <div className="recipe-input">
@@ -289,7 +299,7 @@ class DetailedRecipe extends Component {
               <button
                 type="button"
                 onClick={this.onSubmitCategory}
-                id="categorySubmitButton"
+                className="default-button"
               >
                 +
               </button>
@@ -308,7 +318,7 @@ class DetailedRecipe extends Component {
               <button
                 type="button"
                 onClick={this.onSubmitIngredient}
-                id="ingredientSubmitButton"
+                className="default-button"
               >
                 +
               </button>
@@ -327,7 +337,7 @@ class DetailedRecipe extends Component {
               <button
                 type="button"
                 onClick={this.onSubmitInstruction}
-                id="instructionSubmitButton"
+                className="default-button"
               >
                 +
               </button>
@@ -348,106 +358,148 @@ class DetailedRecipe extends Component {
     );
   }
 
-
-  render() {
-    // return this.renderRating();
-    // /*
-    if (this.state.isEditing) {
-      return this.renderEditing();
-    } else { // NOT EDITING
-      const { current: r } = this.props.recipe;
-      let rating = null;
-      if (r.Rating) {
-        rating = (
-          <StarRatings
-            rating={r.Rating}
-            starRatedColor="yellow"
-            numberOfStars={5}
-            name="rating"
-            starDimension="30px"
-            starSpacing="0px"
-          />
-        );
-      }
-      let description = null;
-      if (r.Description) {
-        description = <h3>&quot;{r.Description}&quot;</h3>;
-      }
-      let directions = null;
-      if (r.Directions) {
-        directions = r.Directions.map((d, idx) => {
-          return <div className="direction-container" key={hashCode(d)}> <span id="stepText">Step {`${idx + 1}:`} </span> {`${d}`}</div>;
-        });
-      }
-      let ingredients = null;
-      if (r.Ingredients) {
-        ingredients = r.Ingredients.map((i) => {
-          return <div className="ingredient-container" key={hashCode(i)}>{i}</div>;
-        });
-      }
-      let categories = null;
-      if (r.Categories) {
-        categories = r.Categories.map((c) => {
-          return <button type="button" key={hashCode(c)}>{c}</button>;
-        });
-      }
-      console.log(r);
-      return (
-        <>
-          <div className="detailed-button-header">
-            <SignOutButton />
-            {this.renderButtonMenu()}
-          </div>
-          <div className="detailed-userpage">
-            <div className="detailed-header">
-              <div className="detailed-author">
-                <h3>{r.RecipeAuthor}</h3>
-                {rating}
-              </div>
-              <h2>{r.RecipeName}</h2>
-              <div className="detailed-buttons">
-                <button type="button" id="editButton" onClick={this.handleEditClick}> Edit </button>
-                <button type="button" id="deleteButton" onClick={this.handleDeleteClick}> Delete </button>
-                <button type="button" id="rateButton" onClick={this.handleRateClick}> Rate this recipe </button>
-                {this.renderRatingScale()}
-              </div>
-            </div>
-            {description}
-            <div className="detailed-body">
-              <div className="detailed-ingredients">
-                <h3> Ingredients </h3>
-                <div className="ingredients-container">
-                  {ingredients}
-                </div>
-              </div>
-              <div className="detailed-categories">
-                <h3> Categories </h3>
-                {categories}
-              </div>
-              <div className="detailed-directions">
-                <h3> Directions </h3>
-                {directions}
-                <h4> You&apos;re done! Now go enjoy it! </h4>
-              </div>
-            </div>
-          </div>
-        </>
+  renderContent = () => {
+    const { current: r } = this.props.recipe;
+    let rating = null;
+    if (r.Rating) {
+      rating = (
+        <StarRatings
+          rating={r.Rating}
+          starRatedColor="yellow"
+          numberOfStars={5}
+          name="rating"
+          starDimension="30px"
+          starSpacing="0px"
+        />
       );
     }
-    // */
+    let description = null;
+    if (r.Description) {
+      description = <h3>&quot;{r.Description}&quot;</h3>;
+    }
+    let directions = null;
+    if (r.Directions) {
+      directions = r.Directions.map((d, idx) => {
+        return <div className="direction-container" key={hashCode(d)}> <span id="stepText">Step {`${idx + 1}:`} </span> {`${d}`}</div>;
+      });
+    }
+    let ingredients = null;
+    if (r.Ingredients) {
+      ingredients = r.Ingredients.map((i) => {
+        return <div className="ingredient-container" key={hashCode(i)}>{i}</div>;
+      });
+    }
+    let categories = null;
+    if (r.Categories) {
+      categories = r.Categories.map((c) => {
+        return <button type="button" key={hashCode(c)}>{c}</button>;
+      });
+    }
+
+    let notes = null;
+    if (this.props.note.all.length !== 0) {
+      notes = this.props.note.all.map((n) => {
+        const date = toDate(r.DateOfEntry).toDateString();
+        return (
+          <div key={`${n.RecipeID}${n.DateOfEntry}`} className="recipe-note-container">
+            <div className="noteRecipe-container">
+              <h2>{n.RecipeName}</h2>
+            </div>
+            <div className="noteTitleDate-container">
+              <h4 id="noteTitle">{n.Title ? n.Title : 'Untitled'}</h4>
+              <h4 id="noteDate"> {date} </h4>
+            </div>
+            <div className="noteBody-container">
+              <h3 id="noteNotes">{n.Notes}</h3>
+            </div>
+          </div>
+        );
+      });
+      notes = (
+        <div className="detailed-notes">
+          <h3> Notes </h3>
+          {notes}
+        </div>
+      );
+    }
+    console.log(r);
+    return (
+      <>
+        <div className="detailed-button-header">
+          <button className="default-button nav-button" type="button" onClick={this.handleBack}>Back</button>
+          <SignOutButton />
+        </div>
+        <div className="detailed-userpage">
+          <div className="detailed-header">
+            <div className="detailed-author">
+              <h3>{r.RecipeAuthor}</h3>
+            </div>
+            <h2>{r.RecipeName}</h2>
+            <div className="detailed-ratings">
+              {rating}
+            </div>
+          </div>
+          <div className="detailed-buttons">
+            <div className="editDeleteContainer">
+              <button type="button" className="default-button form-button" onClick={this.handleEditClick}> Edit </button>
+              <button type="button" className="default-button form-button" onClick={this.handleDeleteClick}> Delete </button>
+              <button type="button" className="default-button form-button" onClick={this.handleFavorite}>Favorite this recipe</button>
+              <button type="button" className="default-button form-button" onClick={this.handleCreateNote}>Create note</button>
+            </div>
+            <div className="rateContainer">
+              <button type="button" className="default-button" id="rateButton" onClick={this.handleRateClick}> Rate this recipe </button>
+              {this.renderRatingScale()}
+            </div>
+          </div>
+          {description}
+          <div className="detailed-body">
+            <div className="detailed-ingredients">
+              <h3> Ingredients </h3>
+              <div className="ingredients-container">
+                {ingredients}
+              </div>
+            </div>
+            <div className="detailed-categories">
+              <h3> Categories </h3>
+              {categories}
+            </div>
+            <div className="detailed-directions">
+              <h3> Directions </h3>
+              {directions}
+              <h4> You&apos;re done! Now go enjoy it! </h4>
+            </div>
+            {notes}
+          </div>
+        </div>
+      </>
+    );
+  }
+
+
+  render() {
+    if (this.state.loading) {
+      return <div className="editingPage"><PulseLoader /></div>;
+    } else if (this.state.isEditing) {
+      return this.renderEditing();
+    } else { // NOT EDITING
+      return this.renderContent();
+    }
   }
 }
 
 const mapStateToProps = (reduxState) => {
   return {
     recipe: reduxState.recipe,
+    note: reduxState.note,
   };
 };
 
 const mapDispatchToProps = {
-  getRecipe,
-  updateRecipe,
   deleteRecipe,
+  getNote,
+  getRecipe,
+  resetNotes,
+  updateRecipe,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DetailedRecipe));

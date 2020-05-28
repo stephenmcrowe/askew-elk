@@ -121,7 +121,7 @@ export const addRecipe = (req, res) => {
   }
   insertRecipe.push(mysql.raw('NOW()'));
 
-  if (!Array.isArray(req.body.Directions) || req.body.Directions.length === 0) {
+  if (!req.body.Directions || req.body.Directions.length === 0) {
     return res.status(400).json({
       error: 'Directions must be included',
       response: null,

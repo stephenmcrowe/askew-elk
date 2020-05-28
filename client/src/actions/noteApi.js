@@ -103,3 +103,9 @@ export function deleteNote(recipeId) {
     });
   };
 }
+
+export function resetNotes() {
+  return {
+    type: ActionTypes.RESET_NOTE,
+  };
+}

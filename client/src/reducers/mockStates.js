@@ -71,3 +71,32 @@ export const recipeState = {
     ],
   },
 };
+
+export const noteState = {
+  all: [
+    {
+      id: 4,
+      title: 'Dinner with Stephen',
+      notes: 'Worked on front-end',
+      dateAdded: '2009-03-27 04:00:00',
+    },
+    {
+      id: 6,
+      title: 'Dinner with JT',
+      notes: 'It was great!',
+      dateAdded: '2009-03-27 04:00:00',
+    },
+    {
+      id: 8,
+      title: 'Dinner with Shik',
+      notes: 'Yummy. The food was really good. asdfYummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good. Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.Yummy. The food was really good.',
+      dateAdded: '2009-03-27 04:00:00',
+    },
+  ],
+  current: {
+    id: 4,
+    title: 'Dinner on Stephen',
+    notes: 'Worked on front-end',
+    dateAdded: '2009-03-27 04:00:00',
+  },
+};

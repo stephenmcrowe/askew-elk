@@ -1,11 +1,12 @@
 import { ActionTypes } from '../actions';
+import { noteState } from './mockStates';
 
 const initialState = {
   all: [],
   current: {},
 };
 
-const NoteReducer = (state = initialState, action) => {
+const NoteReducer = (state = noteState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_NOTES:
       return { ...state, all: action.payload };

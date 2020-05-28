@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PulseLoader from 'react-spinners/PulseLoader';
 import hashCode from './utils';
 import SignOutButton from './signOutButton';
-import { getRecipe, updateRecipe } from '../actions/recipeApi';
+import { deleteRecipe, getRecipe, updateRecipe } from '../actions/recipeApi';
 
 
 class DetailedRecipe extends Component {
@@ -25,6 +25,7 @@ class DetailedRecipe extends Component {
       Instructions: [],
       isEditing: false,
       submitting: false,
+      showRatingScale: false,
     };
   }
 
@@ -55,10 +56,42 @@ class DetailedRecipe extends Component {
       Description: r.Description,
       Categories: r.Categories,
       Ingredients: r.Ingredients,
-      Instructions: r.Instructions,
+      Instructions: r.Directions,
       isEditing: true,
     });
   }
+
+  handleDeleteClick = () => {
+    this.props.deleteRecipe(this.props.recipe.id, this.props.history);
+  }
+
+  onRateButtonClick = () => {
+    this.setState({ showRatingScale: false });
+  }
+
+  ratingScale = () => {
+    if (this.state.showRatingScale) {
+      return (
+        <>
+          <button type="button" id="rateOptionButton" onClick={this.onRateButtonClick}> 1 </button>
+          <button type="button" id="rateOptionButton" onClick={this.onRateButtonClick}> 2 </button>
+          <button type="button" id="rateOptionButton" onClick={this.onRateButtonClick}> 3 </button>
+          <button type="button" id="rateOptionButton" onClick={this.onRateButtonClick}> 4 </button>
+          <button type="button" id="rateOptionButton" onClick={this.onRateButtonClick}> 5 </button>
+        </>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+
+  handleRateClick = () => {
+    this.setState({ showRatingScale: true });
+  }
+
 
   onInputRecipeNameChange = (event) => {
     console.log(event.target.value);
@@ -148,6 +181,40 @@ class DetailedRecipe extends Component {
     }
   }
 
+  renderCategories = () => {
+    return (
+      this.state.Categories.map((x) => {
+        return (
+          <button type="button"
+            id="inputedCategory"
+            key={x}
+          > {x}
+          </button>
+        );
+      })
+    );
+  }
+
+  renderIngredients = () => {
+    return (
+      this.state.Ingredients.map((x) => {
+        return (
+          <button type="button" id="inputedIngredient" key={x}> {x} </button>
+        );
+      })
+    );
+  }
+
+  renderInstructions = () => {
+    return (
+      this.state.Instructions.map((x) => {
+        return (
+          <button type="button" id="inputedInstruction" key={x}> {x} </button>
+        );
+      })
+    );
+  }
+
 
   render() {
     if (this.state.isEditing) {
@@ -157,8 +224,9 @@ class DetailedRecipe extends Component {
             Add your own recipe!
           </div>
           <form>
-            Recipe Name
             <label htmlFor="recipeName">
+              Recipe Name
+
               <input
                 type="text"
                 name="recipeName"
@@ -166,8 +234,8 @@ class DetailedRecipe extends Component {
                 value={this.state.RecipeName}
               />
             </label>
-            Recipe Author
             <label htmlFor="recipeAuthor">
+              Recipe Author
               <input
                 type="text"
                 name="recipeAuthor"
@@ -175,8 +243,8 @@ class DetailedRecipe extends Component {
                 value={this.state.RecipeAuthor}
               />
             </label>
-            Recipe Rating
             <label htmlFor="rating">
+              Recipe Rating
               <input
                 type="text"
                 name="rating"
@@ -184,8 +252,8 @@ class DetailedRecipe extends Component {
                 value={this.state.Rating}
               />
             </label>
-            Recipe Description
             <label htmlFor="recipeDescription">
+              Recipe Description
               <textarea
                 type="text"
                 name="description"
@@ -193,14 +261,8 @@ class DetailedRecipe extends Component {
                 value={this.state.Description}
               />
             </label>
-            Recipe Categories
             <label htmlFor="recipeCategories">
-              <input
-                type="text"
-                name="categories"
-                onChange={this.onInputCategoryChange}
-                value={this.state.Category}
-              />
+              Recipe Categories
               <button
                 type="button"
                 onClick={this.onSubmitCategory}
@@ -208,15 +270,19 @@ class DetailedRecipe extends Component {
               >
                 +
               </button>
-            </label>
-            Recipe Ingredients
-            <label htmlFor="recipeIngredients">
+              <span id="exampleText">(&quot;Seafood&quot;)</span>
               <input
                 type="text"
-                name="ingredients"
-                onChange={this.onInputIngredientChange}
-                value={this.state.ingredient}
+                name="categories"
+                onChange={this.onInputCategoryChange}
+                value={this.state.category}
               />
+            </label>
+            <div className="inputed">
+              {this.renderCategories()}
+            </div>
+            <label htmlFor="recipeIngredients">
+              Recipe Ingredients
               <button
                 type="button"
                 onClick={this.onSubmitIngredient}
@@ -224,15 +290,19 @@ class DetailedRecipe extends Component {
               >
                 +
               </button>
-            </label>
-            Recipe Instructions
-            <label htmlFor="recipeInstructions">
+              <span id="exampleText">(&quot;1 cup of white flour&quot;)</span>
               <input
                 type="text"
-                name="instructions"
-                onChange={this.onInputInstructionChange}
-                value={this.state.instruction}
+                name="ingredients"
+                onChange={this.onInputIngredientChange}
+                value={this.state.ingredient}
               />
+            </label>
+            <div className="inputed">
+              {this.renderIngredients()}
+            </div>
+            <label htmlFor="recipeInstructions">
+              Recipe Instructions
               <button
                 type="button"
                 onClick={this.onSubmitInstruction}
@@ -240,7 +310,17 @@ class DetailedRecipe extends Component {
               >
                 +
               </button>
+              <span id="exampleText">(&quot;Cut the potato into bite-sized cubes&quot;)</span>
+              <textarea
+                type="text"
+                name="instructions"
+                onChange={this.onInputInstructionChange}
+                value={this.state.instruction}
+              />
             </label>
+            <div className="inputed">
+              {this.renderInstructions()}
+            </div>
           </form>
           {this.renderSwitch()}
           <button type="button" onClick={this.log}>Log</button>
@@ -278,10 +358,15 @@ class DetailedRecipe extends Component {
           {this.backButton()}
           <h2>{r.RecipeName}</h2>
           <h3>
-            {r.RecipeAuthor} | Rated {r.Rating}/5
-            <button type="button" id="editButton" onClick={this.handleEditClick}> EDIT </button>
+            {r.recipeAuthor} | Rated {r.rating}/5
           </h3>
-          {description}
+          <div className="detailed-buttons">
+            <button type="button" id="editButton" onClick={this.handleEditClick}> Edit </button>
+            <button type="button" id="deleteButton" onClick={this.handleDeleteClick}> Delete </button>
+            <button type="button" id="rateButton" onClick={this.handleRateClick}> Rate this recipe </button>
+            {this.ratingScale()}
+          </div>
+          <h3>&quot;{r.description}&quot;</h3>
           <div className="detailed-body">
             <div className="detailed-ingredients">
               <h3> Ingredients </h3>
@@ -296,7 +381,7 @@ class DetailedRecipe extends Component {
             <div className="detailed-directions">
               <h3> Directions </h3>
               {directions}
-              <h3> You&apos;re done! Now go enjoy it! </h3>
+              <h4> You&apos;re done! Now go enjoy it! </h4>
             </div>
           </div>
         </div>
@@ -314,6 +399,7 @@ const mapStateToProps = (reduxState) => {
 const mapDispatchToProps = {
   getRecipe,
   updateRecipe,
+  deleteRecipe,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailedRecipe);

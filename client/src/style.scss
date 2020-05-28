@@ -258,6 +258,17 @@ html {
 
 }
 
+// Recipe Box
+
+#deLink {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+}
+
 .recipe-container {
   display: flex;
   flex-direction: row;
@@ -269,16 +280,6 @@ html {
   border-radius: 1em;
   margin-top: 2.5vh;
   margin-bottom: 2.5vh;
-
-
-  #recipeLink {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-  }
 
   #recipeRating {
     width: 100%;
@@ -381,6 +382,8 @@ html {
     width: 100%;
     text-align: center;
     font-family: 'Lato', sans-serif;
+    margin: 0;
+    margin-top: 5vh;
   }
 
   h2 {
@@ -389,17 +392,39 @@ html {
     margin-bottom: 0;
   }
 
-  #editButton { // Edit Button
-    border-radius: 50%;
+  .detailed-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 4vh;
+    width: 100%;
+  }
+
+  #editButton, #deleteButton, #rateButton { // Buttons
+    border-radius: 10px;
     border-color: #47330B;
     background-color: #47330B;
     color: #FFB800;
     box-shadow: black;
     margin: 20px;
-    padding: 15px;
+    padding: 12px;
     font-family: 'Lato', 'san-serif';
-    font-size: 1vw;
+    font-size: 12px;
     z-index: 10;
+  }
+
+  #rateOptionButton {
+    border-radius: 50%;
+    border: none;
+    border-color: #750303;
+    background-color: #750303;
+    box-shadow: #750303;
+    color: white;
+    font-family: 'Lato', 'san-serif';
+    font-size: 20px;
+    margin: 5px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .detailed-body {
@@ -424,7 +449,7 @@ html {
       justify-content: center;
 
       .ingredients-container {
-        background-color: rgb(163, 243, 13);
+        background-color: #750303;
         border: none;
         border-radius: 20px;
         margin-top: 40px;
@@ -451,7 +476,8 @@ html {
       justify-content: center;
       
       button {
-        background-color: rgb(163, 243, 13);
+        background-color: #750303;
+        color: white;
         border: none;
         border-radius: 20px;
         margin: 20px;
@@ -474,20 +500,23 @@ html {
         font-size: 24px;
       }
 
+      h4 {
+        font-size: 30px;
+      }
+
       #stepText {
         font-weight: bold;
-        background-color: rgb(163, 243, 13);
+        background-color: #750303;
       }
 
       .direction-container {
-        background-color: white;
+        color: white;
         margin-top: 10px;
         margin-bottom: 10px;
         border-radius: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
-        background-color: rgb(163, 243, 13);
-        font-size: 18px;
+        padding: 10px;
+        background-color: #750303;
+        font-size: 20px;
       }
     }
   }
@@ -529,12 +558,14 @@ html {
       input {
         width: 100%;
         height: 80%;
+        font-family: 'Lato', sans-serif;
         font-size: medium;
       }
 
       textarea {
         width: 100%;
         height: 20vh;
+        font-family: 'Lato', sans-serif;
         font-size: small;
       }
     }
@@ -563,8 +594,9 @@ html {
   }
 }
 
-.inputtedCategory, .inputtedIngredient {
-  background-color: rgb(163, 243, 13);
+#inputtedCategory, #inputtedIngredient {
+  background-color: #750303;
+  color: white;
   border: none;
   border-radius: 20px;
   margin: 20px;
@@ -573,12 +605,18 @@ html {
   font-size: 14px;
 }
 
-.inputtedInstruction {
-  background-color: rgb(163, 243, 13);
+#inputtedInstruction {
+  background-color: #750303;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   width: 100%;
   text-align: left;
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
 }
 
 #exampleText {
@@ -595,4 +633,152 @@ html {
   font-family: 'Lato', sans-serif;
   font-size: 5vw;
   margin-top: 10vh;
-  color: white;}
+  color: white;
+}
+
+  // New Saved Notes
+
+.notes-inputs-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 100vh;
+
+  .formTitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 4vw;
+    margin-top: 10vh;
+  }
+
+  form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    width: 100%;
+    font-size: 1.5vw;
+
+    label {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: left;
+      width: 60%;
+      // text-align: left;
+      font-family: 'Lato', sans-serif;
+      font-size: 30px;
+      margin-top: 10vh;
+
+      input {
+        width: 100%;
+        font-family: 'Lato', sans-serif;
+        font-size: 20px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 30vh;
+        font-family: 'Lato', sans-serif;
+        font-size: 20px;
+      }
+    }
+  }
+  
+  button {
+    width: 20%;
+  }
+}
+
+// Note Box
+
+.note-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  width: 30%;
+  height: 40%;
+  perspective: 1000px;
+  border-radius: 1em;
+  margin-top: 30px;
+  margin-bottom: 2.5vh;
+  text-align: center;
+}
+
+.note-container-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 1em;
+}
+
+.note-container:hover .note-container-inner {
+  transform: rotateY(180deg);
+}
+
+.noteDate-container {
+  display: flex;
+  width: 90%;
+  height: 20%;
+
+  h4 {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.noteTitle-container {
+  display: flex;
+  width: 90%;
+  height: 30%;
+
+  h2 {
+    text-align: center;
+    color: brown;
+    width: 100%;
+    text-decoration: none;
+  }
+}
+
+.noteBody-container {
+  display: flex;
+  // align-content: center;
+  // align-items: center;
+  width: 90%;
+  height: 95%;
+  overflow: auto;
+
+  h3 {
+    width: 100%;
+    text-align: center;
+    color: white;
+  }
+}
+
+.detailed-notesbody {
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  width: 50%;
+  min-height: 40vh;
+  border-radius: 10px;
+  background-color: white;
+  margin: 10px;
+  padding: 15px;
+
+  h3 {
+    margin: 0;
+    width: 100%;
+  }
+}
+  
+

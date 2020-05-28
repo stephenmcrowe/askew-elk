@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ActionTypes, ROOT_URL } from './index';
 
-export function fetchNote(id) {
+export function getNote(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/savednotes/${id}`;
@@ -21,7 +21,7 @@ export function fetchNote(id) {
   };
 }
 
-export function fetchNotes(params) {
+export function getNotes(params) {
   /*
    * Params should look like:
    * {
@@ -30,7 +30,7 @@ export function fetchNotes(params) {
    */
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/savenotes`;
+      const url = `${ROOT_URL}/savednotes`;
       console.log(`GET: ${url}`);
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
       axios.get(url, { params, headers })

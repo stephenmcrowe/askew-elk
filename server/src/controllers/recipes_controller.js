@@ -302,6 +302,7 @@ export const addRecipe = (req, res) => {
          *  Category:["","",""]
          * }
          */
+        // start here
         let directions = [];
         Object.entries(req.body.Directions).forEach(([k, v]) => {
           directions.push(`(${LAST_INSERT_ID},${k},"${v}")`);
@@ -395,42 +396,93 @@ export const deleteRecipe = (req, res) => {
 };
 
 const UPDATE_BOTH = 'UPDATE RECIPES SET Description = ?, RecipeName = ? WHERE RecipeID = ? AND RecipeAuthor = ?';
-const UPDATE_NAME = 'UPDATE RECIPES SET RecipeName = ? WHERE RecipeID = ? AND RecipeAuthor = ?';
-const UPDATE_DESCRIPTION = 'UPDATE RECIPES SET Description = ? WHERE RecipeID = ? AND RecipeAuthor = ?';
+const DELETE_DIRECTIONS = 'DELETE FROM Directions WHERE RecipeID = ?';
+const DELETE_RECIPE_TO_INGREDIENTS = 'DELETE FROM recipetoingredient WHERE RecipeID = ?';
+const DELETE_RECIPE_TO_CATEGORY = 'DELETE FROM recipetocategory WHERE RecipeID = ?';
 export const updateRecipe = (req, res) => {
   const db = new Database(cnfg);
-  if ('Description' in req.body && 'RecipeName' in req.body) {
-    db.query(UPDATE_BOTH, [req.body.Description, req.body.RecipeName, mysql.raw(req.params.id), (req.user.userID)])
+  db.createTransaction(() => {
+    return db.query(UPDATE_BOTH, [req.body.Description, req.body.RecipeName, mysql.raw(req.params.id), (req.user.userID)])
       .then(() => {
-        res.status(200).json({ error: null, response: 'Update Succeeded' });
-        return db.close();
+        return db.query(DELETE_DIRECTIONS, mysql.raw(req.params.id))
       })
-      .catch((err) => {
-        db.close();
-        console.log(err);
-        res.status(500).json({ error: err.sqlMessage, response: null });
-      });
-  } else if ('RecipeName' in req.body) {
-    db.query(UPDATE_NAME, [req.body.RecipeName, mysql.raw(req.params.id), (req.user.userID)])
       .then(() => {
-        res.status(200).json({ error: null, response: 'Update Succeeded' });
-        return db.close();
+        return db.query(DELETE_RECIPE_TO_INGREDIENTS, mysql.raw(req.params.id))
       })
-      .catch((err) => {
-        db.close();
-        console.log(err);
-        res.status(500).json({ error: err.sqlMessage, response: null });
-      });
-  } else {
-    db.query(UPDATE_DESCRIPTION, [(req.body.Description), mysql.raw(req.params.id), (req.user.userID)])
       .then(() => {
-        res.status(200).json({ error: null, response: 'Update Succeeded' });
-        return db.close();
+        return db.query(DELETE_RECIPE_TO_CATEGORY, mysql.raw(req.params.id))
+      }).then(() => {
+        let directions = [];
+        Object.entries(req.body.Directions).forEach(([k, v]) => {
+          directions.push(`(${req.params.id},${k},"${v}")`);
+        });
+        directions = mysql.raw(directions.join(', '));
+        return db.query(ADD_DIRECTIONS, directions);
       })
-      .catch((err) => {
-        db.close();
-        console.log(err);
-        res.status(500).json({ error: err.sqlMessage, response: null });
-      });
-  }
-};
+      .then(() => {
+        const checkIngredientPromises = req.body.Ingredients.map((i) => {
+          return db.query(CHECK_INGREDIENT, i);
+        });
+        return Promise.all(checkIngredientPromises);
+      })
+      .then(async (checkResult) => {
+        const ingredientToLink = [];
+        for (let i = 0; i < checkResult.length; i += 1) {
+          const queryRes = checkResult[i];
+          if (queryRes.length > 0) {
+            ingredientToLink.push(db.query(
+              ADD_RECIPE_JOIN_INGREDIENT, [req.params.id, queryRes[0].IngredientID],
+            ));
+          } else {
+            // Because LAST_INSERT_ID is being used here, queries must be done
+            // sequentially, not parallelized like with Promise.all.
+            // throw the error to the above catch block (transaction)
+            await db.query(ADD_INGREDIENT, req.body.Ingredients[i]);
+            await db.query(ADD_RECIPE_JOIN_INGREDIENT,
+              [req.params.id, mysql.raw(LAST_INSERT_ID)]);
+          }
+        }
+        return Promise.all(ingredientToLink);
+      })
+      .then(() => {
+        if (!Array.isArray(req.body.Categories)) {
+          return Promise.resolve();
+        }
+        const checkCategoryPromises = req.body.Categories.map((c) => {
+          return db.query(CHECK_CATEGORY, c);
+        });
+        return Promise.all(checkCategoryPromises);
+      })
+      .then(async (checkResult) => {
+        if (!checkResult) {
+          return Promise.resolve();
+        }
+        const categoryToLink = [];
+        for (let i = 0; i < checkResult.length; i += 1) {
+          const queryRes = checkResult[i];
+          if (queryRes.length > 0) {
+            categoryToLink.push(db.query(
+              ADD_RECIPE_JOIN_CATEGORY, [req.params.id, queryRes[0].CategoryID],
+            ));
+          } else {
+            // Because LAST_INSERT_ID is being used here, queries must be done
+            // sequentially, not parallelized like with Promise.all.
+            // throw the error to the above catch block (transaction)
+            await db.query(ADD_CATEGORY, req.body.Categories[i]);
+            await db.query(ADD_RECIPE_JOIN_CATEGORY,
+              [req.params.id, mysql.raw(LAST_INSERT_ID)]);
+          }
+        }
+        return Promise.all(categoryToLink);
+      })
+      .then(() => { return Promise.resolve(req.params.id); });
+  })
+    .then((result) => {
+      console.log(result);
+      res.status(200).json({ error: null, response: req.params.id });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err.sqlMessage, response: null });
+    });
+}

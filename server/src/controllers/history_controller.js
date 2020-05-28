@@ -71,11 +71,11 @@ export const updateHistory = (req, res) => {
   }
 };
 
-const CREATE_HISTORY = 'INSERT INTO history VALUES (?, ?, NOW(), ?)';
+const CREATE_HISTORY = 'INSERT INTO history VALUES (?, ?, NOW(), ?, ?)';
 const GET_LAST_TIME = 'SELECT DateOfEntry FROM history WHERE RecipeID = ? AND UserID = ? ORDER BY DateOfEntry DESC LIMIT 1';
 export const createHistory = (req, res) => {
   const db = new Database(cnfg);
-  db.query(CREATE_HISTORY, [req.params.id, req.user.userID, req.body.Notes])
+  db.query(CREATE_HISTORY, [req.params.id, req.user.userID, req.body.Title, req.body.Notes])
     .then(() => {
       db.query(GET_LAST_TIME, [req.params.id, req.user.userID])
         .then((result) => {

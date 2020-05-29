@@ -1,6 +1,6 @@
 /* eslint-disable no-bitwise */
 // https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
-const hashCode = (s) => {
+export const hashCode = (s) => {
   let hash = 0;
   if (s.length === 0) {
     return hash;
@@ -13,4 +13,7 @@ const hashCode = (s) => {
   return hash;
 };
 
-export default hashCode;
+export const toDate = (s) => {
+  const d = new Date(s);
+  return d;
+};

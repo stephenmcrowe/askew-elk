@@ -29,9 +29,7 @@ class DetailedSavedNote extends Component {
 
   backButton = () => {
     return (
-      <div className="backButtonContainer">
-        <button type="button" onClick={this.handleBack}> Back </button>
-      </div>
+      <button type="button" className="default-button" onClick={this.handleBack}> Back </button>
     );
   }
 
@@ -81,7 +79,7 @@ class DetailedSavedNote extends Component {
         <button
           type="button"
           onClick={this.handleSubmit}
-          id="addRecipeButton"
+          className="default-button"
         >
           Update Note
         </button>
@@ -128,8 +126,8 @@ class DetailedSavedNote extends Component {
           {this.backButton()}
           <h2>{r.title}</h2>
           <div className="detailed-buttons">
-            <button type="button" id="editButton" onClick={this.handleEditClick}> Edit </button>
-            <button type="button" id="deleteButton" onClick={this.handleDeleteClick}> Delete </button>
+            <button type="button" className="default-button" onClick={this.handleEditClick}> Edit </button>
+            <button type="button" className="default-button" onClick={this.handleDeleteClick}> Delete </button>
           </div>
           <div className="detailed-notesbody">
             <h3> {r.notes} </h3>

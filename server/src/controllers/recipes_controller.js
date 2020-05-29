@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-await-in-loop */
 /**
  * Recipes Controller - Askew Elk
@@ -36,7 +37,7 @@ export const getRecipe = (req, res) => {
   })
     .then((result) => {
       const recipe = result[0];
-      recipe.Categories = recipe.Categories.split('|');
+      recipe.Categories = recipe.Categories ? recipe.Categories.split('|') : [];
       recipe.Ingredients = recipe.Ingredients.split('|');
       recipe.Directions = recipe.Directions.split('|');
       res.status(200).json({ error: null, response: recipe });
@@ -151,6 +152,20 @@ export const addRecipe = (req, res) => {
   }
   insertRecipe.push(mysql.raw('NOW()'));
 
+  if (!req.body.Directions || req.body.Directions.length === 0) {
+    return res.status(400).json({
+      error: 'Directions must be included',
+      response: null,
+    });
+  }
+  if (!Array.isArray(req.body.Ingredients)
+        || req.body.Ingredients.length === 0) {
+    return res.status(400).json({
+      error: 'Ingredients must be included',
+      response: null,
+    });
+  }
+
   let recipeID = 0;
   const db = new Database(cnfg);
   db.createTransaction(() => {
@@ -222,8 +237,7 @@ export const addRecipe = (req, res) => {
           }
         }
         return Promise.all(categoryToLink);
-      })
-      .then(() => { return Promise.resolve(recipeID); });
+      });
   })
     .then((result) => {
       res.status(200).json({ error: null, response: recipeID });
@@ -243,8 +257,15 @@ const DELETE_RECIPE = 'DELETE FROM RECIPES WHERE recipeID = ? AND RecipeAuthor =
 export const deleteRecipe = (req, res) => {
   const db = new Database(cnfg);
   db.query(DELETE_RECIPE, [req.params.id, req.user.userID])
-    .then(() => {
-      res.status(200).json({ error: null, response: 'Delete succeeded' });
+    .then((result) => {
+      if (result.affectedRows === 0) {
+        res.status(403).json({
+          error: 'You cannot delete someone else\'s recipe!',
+          response: null,
+        });
+      } else {
+        res.status(200).json({ error: null, response: 'Delete succeeded' });
+      }
       return db.close();
     })
     .catch((err) => {

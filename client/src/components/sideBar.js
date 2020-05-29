@@ -3,8 +3,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import logo from '../img/logo-sidebar.png';
 
-
-const sideBar = (props) => {
+const SideBar = (props) => {
+  const username = localStorage.getItem('username');
   return (
     <div className="sidebar-container">
       <img src={logo} id="logoSideBar" alt="Logo" />
@@ -30,9 +30,18 @@ const sideBar = (props) => {
         >Favorites
         </button>
       </NavLink>
-      <NavLink to="/savednotes"><button type="button" id="savedNotesButton">Saved Notes</button></NavLink>
+      <NavLink to="/savednotes">
+        <button
+          type="button"
+          id="savedNotesButton"
+        >Saved Notes
+        </button>
+      </NavLink>
+      <div className="signedInAs">
+        <h3> <span> Signed in as: </span> {username}</h3>
+      </div>
     </div>
   );
 };
 
-export default sideBar;
+export default SideBar;

@@ -86,7 +86,6 @@ class NewRecipe extends Component {
 
   handleBack = () => {
     this.props.history.goBack();
-    // this.props.history.push('/browse/yourrecipes');
   };
 
   renderSwitch = () => {
@@ -165,10 +164,6 @@ class NewRecipe extends Component {
       );
     });
     return render;
-  }
-
-  log = () => {
-    console.log(this.state);
   }
 
   render() {
@@ -264,7 +259,6 @@ class NewRecipe extends Component {
             </div>
           </form>
           {this.renderSwitch()}
-          {/* <button type="button" onClick={this.log}>Log</button> */}
         </div>
       </div>
     );

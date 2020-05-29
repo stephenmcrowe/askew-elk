@@ -10,7 +10,7 @@
     "test": "eslint src/**.js",
     "winbuild": "yarn clean & SET WEBPACK_ENV=production& webpack --colors",
     "clean": "rimraf dist",
-    "windeploy": "yarn winbuild & surge -p dist -d julian-cs52-starter.surge.sh & yarn clean"
+    "windeploy": "yarn winbuild & surge -p dist -d chefskiss.surge.sh & yarn clean"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

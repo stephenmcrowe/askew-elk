@@ -19,8 +19,8 @@ const TopBarSignIn = (props) => {
 const HomePage = (props) => {
   return (
     <>
-      <TopBarSignIn />
       <div className="main-container">
+        <TopBarSignIn />
         <div className="main-container-left">
           <div className="main-container-left-row1">
             <img src={logo} id="logoPic" alt="Title Logo" />

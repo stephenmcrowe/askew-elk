@@ -4,6 +4,7 @@ import { ActionTypes } from '../actions';
 const initialState = {
   all: [],
   current: {},
+  favorite: false,
 };
 
 const RecipeReducer = (state = initialState, action) => {
@@ -12,6 +13,8 @@ const RecipeReducer = (state = initialState, action) => {
       return { ...state, all: action.payload };
     case ActionTypes.FETCH_RECIPE:
       return { ...state, current: action.payload };
+    case ActionTypes.FETCH_FAVORITE:
+      return { ...state, favorite: action.payload };
     case ActionTypes.RESET_RECIPE:
       return initialState;
     default:

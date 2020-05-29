@@ -16,8 +16,12 @@ import {
   deleteRecipe,
   getRecipe,
   updateRecipe,
+  getFavorite,
+  createFavorite,
+  deleteFavorite,
 } from '../actions/recipeApi';
-import { getNote, resetNotes } from '../actions/noteApi';
+import { getNote, resetNotes, deleteNote } from '../actions/noteApi';
+import { rateRecipe, updateRating } from '../actions/ratingApi';
 
 
 class DetailedRecipe extends Component {
@@ -34,17 +38,23 @@ class DetailedRecipe extends Component {
       Ingredients: new Set(),
       instruction: '',
       Instructions: [],
+      recipeID: this.props.match.params.id,
       isEditing: false,
       loading: true,
       submitting: false,
       showRatingScale: false,
+      showRatingMessage: false,
     };
   }
 
   componentDidMount() {
-    this.props.getRecipe(this.props.match.params.id)
+    const { id: recipeId } = this.props.match.params;
+    this.props.getRecipe(recipeId)
       .then(() => {
-        return this.props.getNote(this.props.match.params.id);
+        return this.props.getNote(recipeId);
+      })
+      .then(() => {
+        return this.props.getFavorite(recipeId);
       })
       .then(() => this.setState({ loading: false }));
   }
@@ -57,14 +67,26 @@ class DetailedRecipe extends Component {
     this.props.history.push('/browse');
   };
 
-  handleFavorite = () => {
-    // NEED TO DO -- HELP ME STEPHEN
-    this.props.history.goBack();
+  handleFavoriteClick = () => {
+    const { id: recipeId } = this.props.match.params;
+    if (this.props.recipe.favorite) {
+      this.props.deleteFavorite(recipeId)
+        .then(() => {
+          return this.props.getFavorite(recipeId);
+        });
+    } else {
+      this.props.createFavorite(recipeId)
+        .then(() => {
+          return this.props.getFavorite(recipeId);
+        });
+    }
   }
 
   handleCreateNote = () => {
-    // NEED TO DO -- HELP ME STEPHEN
-    this.props.history.push('/savednotes/create');
+    this.props.history.push({
+      pathname: '/savednotes/create',
+      state: { recipeID: this.props.match.params.id },
+    });
   }
 
   handleEditClick = () => {
@@ -84,8 +106,22 @@ class DetailedRecipe extends Component {
       .then(() => this.props.history.push('/browse'));
   }
 
-  onRateButtonClick = () => {
-    this.setState({ showRatingScale: false });
+  handleNoteEditClick = (n) => {
+    this.props.history.push({
+      pathname: '/savednotes/edit',
+      state: { recipeID: this.props.match.params.id, note: n },
+    });
+  }
+
+  handleNoteDeleteClick = (n) => {
+    this.setState({ loading: true });
+    this.props.deleteNote(this.props.match.params.id, n.DateOfEntry)
+      .then(() => {
+        return this.props.getNote(this.props.match.params.id);
+      })
+      .then(() => {
+        this.setState({ loading: false });
+      });
   }
 
   handleRateClick = () => {
@@ -97,9 +133,20 @@ class DetailedRecipe extends Component {
   }
 
   changeRating = (newRating) => {
-    this.setState({
-      Rating: newRating,
-    });
+    const { id: recipeId } = this.props.match.params;
+    this.props.rateRecipe(newRating, recipeId)
+      .then(this.ratingOnCompletionCallback)
+      .catch(() => {
+        return this.props.updateRating(newRating, recipeId);
+      })
+      .then(this.ratingOnCompletionCallback);
+  }
+
+  ratingOnCompletionCallback = () => {
+    this.setState({ showRatingScale: false, showRatingMessage: true });
+    setTimeout(() => {
+      this.setState({ showRatingMessage: false });
+    }, 5000);
   }
 
   onInputDescriptionChange = (event) => {
@@ -185,6 +232,72 @@ class DetailedRecipe extends Component {
       });
   }
 
+  renderButtons = () => {
+    const username = localStorage.getItem('username');
+    const { RecipeAuthor: author } = this.props.recipe.current;
+    if (username === author) {
+      return (
+        <div className="detailed-buttons">
+          <div className="editDeleteContainer">
+            <button
+              type="button"
+              className="default-button form-button"
+              onClick={this.handleEditClick}
+            >Edit
+            </button>
+            <button
+              type="button"
+              className="default-button form-button"
+              onClick={this.handleDeleteClick}
+            > Delete
+            </button>
+            <button
+              type="button"
+              className="default-button form-button"
+              onClick={this.handleFavoriteClick}
+            >{`${this.props.recipe.favorite ? 'Unf' : 'F'}avorite this recipe`}
+            </button>
+            <button
+              type="button"
+              className="default-button form-button"
+              onClick={this.handleCreateNote}
+            >Create note
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="detailed-buttons">
+        <div className="editDeleteContainer">
+          <button
+            type="button"
+            className="default-button form-button"
+            onClick={this.handleFavoriteClick}
+          >{`${this.props.recipe.favorite ? 'Unf' : 'F'}avorite this recipe`}
+          </button>
+          <button
+            type="button"
+            className="default-button form-button"
+            onClick={this.handleCreateNote}
+          >Create note
+          </button>
+        </div>
+        <div className="rateContainer">
+          <button
+            type="button"
+            className="default-button"
+            id="rateButton"
+            onClick={this.handleRateClick}
+          > Rate this recipe
+          </button>
+          {this.renderRatingScale()}
+          {this.renderRatingMessage()}
+        </div>
+      </div>
+    );
+  }
+
   renderRatingScale = () => {
     if (this.state.showRatingScale) {
       return (
@@ -197,6 +310,18 @@ class DetailedRecipe extends Component {
           starDimension="24px"
           starSpacing="0px"
         />
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderRatingMessage = () => {
+    if (this.state.showRatingMessage) {
+      return (
+        <h4 id="rating-submitted"> Rating submitted! </h4>
       );
     } else {
       return (
@@ -352,7 +477,6 @@ class DetailedRecipe extends Component {
             </div>
           </form>
           {this.renderSwitch()}
-          <button type="button" onClick={this.log}>Log</button>
         </div>
       </div>
     );
@@ -399,17 +523,28 @@ class DetailedRecipe extends Component {
     let notes = null;
     if (this.props.note.all.length !== 0) {
       notes = this.props.note.all.map((n) => {
-        const date = toDate(r.DateOfEntry).toDateString();
+        const date = toDate(n.DateOfEntry).toDateString();
         return (
           <div key={`${n.RecipeID}${n.DateOfEntry}`} className="recipe-note-container">
-            <div className="noteRecipe-container">
-              <h2>{n.RecipeName}</h2>
+            <div className="detailed-noteTitleDate-container">
+              <h4 id="detailed-noteTitle">{n.Title ? n.Title : 'Untitled'}</h4>
+              <div className="detailed-editDeleteButton-container">
+                <button
+                  type="button"
+                  className="default-button small-button"
+                  onClick={() => this.handleNoteEditClick(n)}
+                > Edit
+                </button>
+                <button
+                  type="button"
+                  className="default-button small-button"
+                  onClick={() => this.handleNoteDeleteClick(n)}
+                > Delete
+                </button>
+              </div>
+              <h4 id="detailed-noteDate"> {date} </h4>
             </div>
-            <div className="noteTitleDate-container">
-              <h4 id="noteTitle">{n.Title ? n.Title : 'Untitled'}</h4>
-              <h4 id="noteDate"> {date} </h4>
-            </div>
-            <div className="noteBody-container">
+            <div className="detailed-noteBody-container">
               <h3 id="noteNotes">{n.Notes}</h3>
             </div>
           </div>
@@ -422,7 +557,6 @@ class DetailedRecipe extends Component {
         </div>
       );
     }
-    console.log(r);
     return (
       <>
         <div className="detailed-button-header">
@@ -439,18 +573,7 @@ class DetailedRecipe extends Component {
               {rating}
             </div>
           </div>
-          <div className="detailed-buttons">
-            <div className="editDeleteContainer">
-              <button type="button" className="default-button form-button" onClick={this.handleEditClick}> Edit </button>
-              <button type="button" className="default-button form-button" onClick={this.handleDeleteClick}> Delete </button>
-              <button type="button" className="default-button form-button" onClick={this.handleFavorite}>Favorite this recipe</button>
-              <button type="button" className="default-button form-button" onClick={this.handleCreateNote}>Create note</button>
-            </div>
-            <div className="rateContainer">
-              <button type="button" className="default-button" id="rateButton" onClick={this.handleRateClick}> Rate this recipe </button>
-              {this.renderRatingScale()}
-            </div>
-          </div>
+          {this.renderButtons()}
           {description}
           <div className="detailed-body">
             <div className="detailed-ingredients">
@@ -495,11 +618,17 @@ const mapStateToProps = (reduxState) => {
 };
 
 const mapDispatchToProps = {
+  getRecipe,
+  updateRecipe,
   deleteRecipe,
   getNote,
-  getRecipe,
+  deleteNote,
   resetNotes,
-  updateRecipe,
+  createFavorite,
+  getFavorite,
+  deleteFavorite,
+  rateRecipe,
+  updateRating,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DetailedRecipe));

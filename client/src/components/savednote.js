@@ -8,7 +8,6 @@ import { toDate } from './utils';
 
 class SavedNote extends Component {
   render() {
-    console.log(this.props.note.all);
     const notes = this.props.note.all.map((r) => {
       const date = toDate(r.DateOfEntry).toDateString();
       return (

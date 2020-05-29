@@ -4,13 +4,11 @@ import { combineReducers } from 'redux';
 
 import ErrorReducer from './errorReducer';
 import RecipeReducer from './recipeReducer';
-import UserReducer from './userReducer';
 import NoteReducer from './noteReducer';
 
 const rootReducer = combineReducers({
   errors: ErrorReducer,
   recipe: RecipeReducer,
-  user: UserReducer,
   note: NoteReducer,
 });
 

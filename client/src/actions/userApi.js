@@ -17,8 +17,7 @@ export function signupUser(user) {
         .then((resp) => {
           const { response } = resp.data;
           localStorage.setItem('token', response.token);
-          delete response.token;
-          dispatch({ type: ActionTypes.AUTH_USER, payload: response });
+          localStorage.setItem('username', response.username);
           resolve(response);
         })
         .catch((error) => {
@@ -45,8 +44,7 @@ export function signinUser(user) {
         .then((resp) => {
           const { response } = resp.data;
           localStorage.setItem('token', response.token);
-          delete response.token;
-          dispatch({ type: ActionTypes.AUTH_USER, payload: response });
+          localStorage.setItem('username', response.username);
           resolve(response);
         })
         .catch((error) => {

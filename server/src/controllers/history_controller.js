@@ -122,7 +122,7 @@ const DELETE_HISTORY = 'DELETE FROM history WHERE RecipeID = ? AND UserID = ? AN
 export const deleteHistory = (req, res) => {
   const db = new Database(cnfg);
   db.query(DELETE_HISTORY, [req.params.id, req.user.userID, req.body.DateOfEntry])
-    .then(() => {
+    .then((result) => {
       res.status(200).json({ error: null, response: 'Delete succeeded' });
       return db.close();
     })

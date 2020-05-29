@@ -9,7 +9,6 @@ class NewSavedNote extends Component {
     super(props);
 
     this.state = {
-      id: '', // recipe ID
       Title: '',
       Notes: '',
       submitting: false,
@@ -24,18 +23,17 @@ class NewSavedNote extends Component {
     this.setState({ Notes: event.target.value });
   }
 
-  // STEPHEN
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ submitting: true });
     const payload = {
-      id: this.state.id,
       Title: this.state.Title,
       Notes: this.state.Notes,
     };
-    this.props.createNote(payload)
+    const { recipeID } = this.props.location.state;
+    this.props.createNote(payload, recipeID)
       .then((result) => {
-        this.props.history.push(`/savednotes/${result}`);
+        this.props.history.push(`/recipe/${recipeID}`);
       })
       .catch((error) => {
         this.setState({ submitting: false });
@@ -48,7 +46,6 @@ class NewSavedNote extends Component {
 
   handleBack = () => {
     this.props.history.goBack();
-    // this.props.history.push('/savednotes');
   };
 
   // eslint-disable-next-line consistent-return
@@ -61,25 +58,20 @@ class NewSavedNote extends Component {
           <button
             type="button"
             onClick={this.handleSubmit}
-            id="addRecipeButton"
+            className="default-button form-button"
           >
             Add Note
           </button>
           <button
             type="button"
             onClick={this.handleBack}
-            id="cancelButton"
+            className="default-button form-button"
           >Cancel
           </button>
         </>
       );
     }
   }
-
-  //   log = () => {
-  //     console.log(this.state);
-  //   }
-
 
   render() {
     return (
@@ -109,7 +101,6 @@ class NewSavedNote extends Component {
             </label>
           </form>
           {this.renderSwitch()}
-          {/* <button type="button" onClick={this.log}>Log</button> */}
         </div>
       </div>
     );

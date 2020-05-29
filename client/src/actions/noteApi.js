@@ -69,7 +69,7 @@ export function createNote(note, recipeId) {
 export function updateNote(note, recipeId) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/history/${recipeId}?`;
+      const url = `${ROOT_URL}/history/${recipeId}`;
       console.log(`UPDATE: ${url}`);
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
       axios.put(url, note, { headers })
@@ -85,13 +85,16 @@ export function updateNote(note, recipeId) {
   };
 }
 
-export function deleteNote(recipeId) {
+export function deleteNote(recipeId, date) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/savednotes/${recipeId}`;
+      const url = `${ROOT_URL}/history/${recipeId}`;
       console.log(`DELETE: ${url}`);
       const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
-      axios.delete(url, { headers })
+      const data = {
+        DateOfEntry: date,
+      };
+      axios.delete(url, { data, headers })
         .then((resp) => {
           const { response } = resp.data;
           resolve(response);

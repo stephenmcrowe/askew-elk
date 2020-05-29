@@ -1,5 +1,5 @@
-export const ROOT_URL = 'http://localhost:3000';
-// export const ROOT_URL = 'https://https://askew-elk.herokuapp.com';
+// export const ROOT_URL = 'http://localhost:3000';
+export const ROOT_URL = 'https://askew-elk.herokuapp.com';
 
 export const ActionTypes = {
   AUTH_USER: 'AUTH_USER',
@@ -11,5 +11,6 @@ export const ActionTypes = {
   FETCH_NOTES: 'FETCH_NOTES',
   FETCH_NOTE: 'FETCH_NOTE',
   RESET_NOTE: 'RESET_NOTE',
+  FETCH_FAVORITE: 'FETCH_FAVORITE',
   ERROR_SET: 'ERROR_SET',
 };

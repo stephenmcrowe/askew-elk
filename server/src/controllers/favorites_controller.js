@@ -44,9 +44,9 @@ export const getFavorites = (req, res) => {
 const GET_FAVORITE = 'SELECT r.RecipeName, r.RecipeID, r.RecipeAuthor, r.DateAdded, r.Description FROM favorites f JOIN recipes r ON f.RecipeID = r.RecipeID WHERE f.UserID = ? AND r.RecipeID = ?';
 export const getFavorite = (req, res) => {
   const db = new Database(cnfg);
-  db.query(GET_FAVORITE, [req.user.userID, req.body.RecipeID])
+  db.query(GET_FAVORITE, [req.user.userID, req.params.id])
     .then((result) => {
-      const response =  result.length === 0 ? null : result[0];
+      const response = result.length === 0 ? null : result[0];
       res.status(200).json({ error: null, response });
       db.close();
     })
@@ -87,8 +87,8 @@ WHERE UserID = ?
 AND RecipeID = ?`;
 export const deleteFavorite = (req, res) => {
   const db = new Database(cnfg);
-  db.query(DELETE_FAVORITE, [req.user.userID, req.body.RecipeID])
-    .then(() => {
+  db.query(DELETE_FAVORITE, [req.user.userID, req.params.id])
+    .then((result) => {
       res.status(200).json({ error: null, response: 'Deleted Successfully' });
       db.close();
     })

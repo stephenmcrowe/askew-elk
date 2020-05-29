@@ -1,1 +1,1 @@
-web: cd server && yarn prod
+web: yarn prod

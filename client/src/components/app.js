@@ -3,7 +3,7 @@
 import '../style.scss';
 import React from 'react';
 import {
-  BrowserRouter as Router, Route, Switch,
+  BrowserRouter as Router, Route, Switch, Redirect,
 } from 'react-router-dom';
 
 /* Custom imports */
@@ -36,6 +36,7 @@ const App = (props) => {
           <PrivateRoute exact path="/savednotes/edit" component={EditSavedNote} />
           <PrivateRoute exact path="/savednotes" component={SavedNotes} />
           <PrivateRoute path="/browse" component={UserPage} />
+          <Redirect from="/" to="/browse" />
           <Route component={FallBack} />
         </Switch>
       </Router>

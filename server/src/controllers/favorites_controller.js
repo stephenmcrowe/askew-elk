@@ -41,12 +41,13 @@ export const getFavorites = (req, res) => {
  * getFavorite()
  * get a brief description of a recipe that a user has set as a favorite
  */
-const GET_FAVORITE = 'SELECT r.RecipeName, r.RecipeAuthor, r.DateAdded, r.Description FROM favorites f JOIN recipes r ON f.RecipeID = r.RecipeID WHERE f.UserID = ? AND r.RecipeID = ?';
+const GET_FAVORITE = 'SELECT r.RecipeName, r.RecipeID, r.RecipeAuthor, r.DateAdded, r.Description FROM favorites f JOIN recipes r ON f.RecipeID = r.RecipeID WHERE f.UserID = ? AND r.RecipeID = ?';
 export const getFavorite = (req, res) => {
   const db = new Database(cnfg);
   db.query(GET_FAVORITE, [req.user.userID, req.body.RecipeID])
     .then((result) => {
-      res.status(200).json({ error: null, response: result[0] });
+      const response =  result.length === 0 ? null : result[0];
+      res.status(200).json({ error: null, response });
       db.close();
     })
     .catch((err) => {

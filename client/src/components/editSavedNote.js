@@ -3,66 +3,55 @@ import { connect } from 'react-redux';
 
 /* Custom Imports */
 import PulseLoader from 'react-spinners/PulseLoader';
-import SignOutButton from './signOutButton';
-import { updateNote, deleteNote } from '../actions/noteApi';
+import { getNote, updateNote } from '../actions/noteApi';
 
 
 class DetailedSavedNote extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: '',
       Title: '',
       Notes: '',
-      isEditing: false,
       submitting: false,
     };
   }
 
+  componentDidMount() {
+    if (!this.props.location.state) {
+      this.props.history.push('/browse');
+    } else {
+      console.log(this.props.location.state);
+      this.setState({
+        Title: this.props.location.state.note.Title,
+        Notes: this.props.location.state.note.Notes,
+      });
+    }
+  }
+
   handleBack = () => {
-    this.props.history.push('/savednotes');
+    this.props.history.goBack();
   };
 
-  backButton = () => {
-    return (
-      <div className="backButtonContainer">
-        <button type="button" onClick={this.handleBack}> Back </button>
-      </div>
-    );
-  }
-
-  handleEditClick = () => {
-    const { current: r } = this.props.note;
-    this.setState({
-      id: r.id,
-      Title: r.title,
-      Notes: r.notes,
-      isEditing: true,
-    });
-  }
-
-  handleDeleteClick = () => {
-    this.props.deleteRecipe(this.props.recipe.id, this.props.history);
-  }
-
   onInputTitleChange = (event) => {
-    console.log(event.target.value);
     this.setState({ Title: event.target.value });
   }
 
   onInputNotesChange = (event) => {
-    console.log(event.target.value);
     this.setState({ Notes: event.target.value });
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('submitting!');
     this.setState({ submitting: true });
-    this.props.updateNote(this.state)
+    const { recipeID } = this.props.location.state;
+    const payload = {
+      Title: this.state.Title,
+      Notes: this.state.Notes,
+      DateOfEntry: this.props.location.state.note.DateOfEntry,
+    };
+    this.props.updateNote(payload, recipeID)
       .then((result) => {
-        console.log(result);
-        this.props.navigation.push(`/savednotes/${result}`);
+        this.props.history.push(`/recipe/${recipeID}`);
       })
       .catch((error) => {
         this.setState({ submitting: false });
@@ -79,20 +68,28 @@ class DetailedSavedNote extends Component {
       return (<PulseLoader />);
     } else {
       return (
-        <button
-          type="button"
-          onClick={this.handleSubmit}
-          id="addRecipeButton"
-        >
-          Update Note
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={this.handleSubmit}
+            className="default-button form-button"
+          >
+            Update Note
+          </button>
+          <button
+            type="button"
+            onClick={this.handleBack}
+            className="default-button form-button"
+          >Cancel
+          </button>
+        </>
       );
     }
   }
 
   render() {
-    if (this.state.isEditing) {
-      return ( // EDITING
+    return (
+      <div className="center-container">
         <div className="notes-inputs-container">
           <div className="formTitle">
             Edit your note
@@ -120,24 +117,8 @@ class DetailedSavedNote extends Component {
           {this.renderSwitch()}
           {/* <button type="button" onClick={this.log}>Log</button> */}
         </div>
-      );
-    } else { // NOT EDITING
-      const { current: r } = this.props.note;
-      return (
-        <div className="detailed-userpage">
-          <SignOutButton />
-          {this.backButton()}
-          <h2>{r.title}</h2>
-          <div className="detailed-buttons">
-            <button type="button" id="editButton" onClick={this.handleEditClick}> Edit </button>
-            <button type="button" id="deleteButton" onClick={this.handleDeleteClick}> Delete </button>
-          </div>
-          <div className="detailed-notesbody">
-            <h3> {r.notes} </h3>
-          </div>
-        </div>
-      );
-    }
+      </div>
+    );
   }
 }
 
@@ -147,4 +128,9 @@ const mapStateToProps = (reduxState) => {
   };
 };
 
-export default connect(mapStateToProps, { updateNote, deleteNote })(DetailedSavedNote);
+const mapDispatchToProps = {
+  getNote,
+  updateNote,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailedSavedNote);

@@ -10,8 +10,8 @@ import logo from '../img/title_logo.png';
 const TopBarSignIn = (props) => {
   return (
     <div className="buttons-container">
-      <NavLink to="/signup"> <button type="button" id="signUpButton">SIGN UP</button></NavLink>
-      <NavLink to="/signin"><button type="button" id="signInButton">SIGN IN</button></NavLink>
+      <NavLink to="/signup"><button type="button" className="default-button nav-button">SIGN UP</button></NavLink>
+      <NavLink to="/signin"><button type="button" className="default-button nav-button">SIGN IN</button></NavLink>
     </div>
   );
 };
@@ -19,8 +19,8 @@ const TopBarSignIn = (props) => {
 const HomePage = (props) => {
   return (
     <>
-      <TopBarSignIn />
       <div className="main-container">
+        <TopBarSignIn />
         <div className="main-container-left">
           <div className="main-container-left-row1">
             <img src={logo} id="logoPic" alt="Title Logo" />

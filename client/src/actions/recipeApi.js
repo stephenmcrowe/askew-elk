@@ -6,7 +6,8 @@ export function getRecipe(id) {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/recipe/${id}`;
       console.log(`GET: ${url}`);
-      axios.get(url)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
@@ -24,18 +25,98 @@ export function getRecipes(params) {
   /*
    * Params should look like:
    * {
-   *    recipeName: str
-   *    recipeAuthor: username (str)
+   *    RecipeName: str
    * }
    */
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/recipes`;
       console.log(`GET: ${url}`);
-      axios.get(url, { params })
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { params, headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_RECIPES, payload: response });
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch({ type: ActionTypes.ERROR_SET, error });
+          reject(error);
+        });
+    });
+  };
+}
+
+export function getFavorites(params) {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      const url = `${ROOT_URL}/favorites`;
+      console.log(`GET: ${url}`);
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { params, headers })
+        .then((resp) => {
+          const { response } = resp.data;
+          dispatch({ type: ActionTypes.FETCH_RECIPES, payload: response });
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch({ type: ActionTypes.ERROR_SET, error });
+          reject(error);
+        });
+    });
+  };
+}
+
+export function getFavorite(recipeId) {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      const url = `${ROOT_URL}/favorite/${recipeId}`;
+      console.log(`GET: ${url}`);
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { headers })
+        .then((resp) => {
+          const { response } = resp.data;
+          const haveFavorite = Boolean(response);
+          dispatch({ type: ActionTypes.FETCH_FAVORITE, payload: haveFavorite });
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch({ type: ActionTypes.ERROR_SET, error });
+          reject(error);
+        });
+    });
+  };
+}
+
+export function createFavorite(recipeId) {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      const url = `${ROOT_URL}/favorites`;
+      console.log(`POST: ${url}`);
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.post(url, { RecipeID: recipeId }, { headers })
+        .then((resp) => {
+          const { response } = resp.data;
+          dispatch({ type: ActionTypes.FETCH_FAVORITE, payload: true });
+          resolve(response);
+        })
+        .catch((error) => {
+          dispatch({ type: ActionTypes.ERROR_SET, error });
+          reject(error);
+        });
+    });
+  };
+}
+
+export function deleteFavorite(recipeId) {
+  return (dispatch) => {
+    return new Promise((resolve, reject) => {
+      const url = `${ROOT_URL}/favorite/${recipeId}`;
+      console.log(`DELETE: ${url}`);
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.delete(url, { headers })
+        .then((resp) => {
+          const { response } = resp.data;
           resolve(response);
         })
         .catch((error) => {
@@ -49,19 +130,24 @@ export function getRecipes(params) {
 export function createRecipe(recipe) {
   /*
    * recipe should look like:
-   * {
-   *    recipeName: str
-   *    recipeAuthor: username (str)
-   * }
+   * RecipeName: str
+   * Description: str,
+   * Directions: {
+   *   "1": "Get Shik",
+   *   "2": "Get JT",
+   *   "3": "Get Julian"
+   * },
+   * Ingredients: array of strs
+   * Categories": array of strs
    */
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       const url = `${ROOT_URL}/recipes`;
       console.log(`POST: ${url}`);
-      axios.post(url, recipe)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.post(url, recipe, { headers })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPES, payload: response });
           resolve(response);
         })
         .catch((error) => {
@@ -75,12 +161,13 @@ export function createRecipe(recipe) {
 export function updateRecipe(recipe) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipes/${recipe.id}`;
+      const url = `${ROOT_URL}/recipe/${recipe.id}`;
       console.log(`UPDATE: ${url}`);
-      axios.put(url, recipe)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.put(url, recipe, { headers })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
+          // dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
           resolve(response);
         })
         .catch((error) => {
@@ -91,17 +178,16 @@ export function updateRecipe(recipe) {
   };
 }
 
-export function deleteRecipe(recipe, history) {
+export function deleteRecipe(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/recipes`;
+      const url = `${ROOT_URL}/recipe/${id}`;
       console.log(`DELETE: ${url}`);
-      axios.delete(url, recipe)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.delete(url, { headers })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_RECIPE, payload: response });
           resolve(response);
-          history.push('/recipe');
         })
         .catch((error) => {
           dispatch({ type: ActionTypes.ERROR_SET, error });

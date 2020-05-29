@@ -19,14 +19,12 @@ class SignOutButton extends Component {
 
     render() {
       return (
-        <div className="buttons-container">
-          <button
-            type="button"
-            onClick={this.handleSignOut}
-            id="signOutButton"
-          >SIGN OUT
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={this.handleSignOut}
+          className="default-button nav-button"
+        >SIGN OUT
+        </button>
       );
     }
 }

@@ -36,12 +36,10 @@ export const updateIngredient = (req, res) => {
       });
   })
     .then((result) => {
-      console.log(result);
       res.status(200).json({ error: null, response: 'Ingredient Update Successfully' });
     })
     .catch((err) => {
       console.log(err);
       res.status(500).json({ error: err.sqlMessage, response: null });
     });
-
 };

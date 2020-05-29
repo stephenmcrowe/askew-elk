@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { ActionTypes, ROOT_URL } from './index';
 
-export function getNote(id) {
+export function getNote(recipeId) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/savednotes/${id}`;
+      const url = `${ROOT_URL}/history/${recipeId}`;
       console.log(`GET: ${url}`);
-      axios.get(url)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { headers })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
+          dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
           resolve(response);
         })
         .catch((error) => {
@@ -29,9 +30,10 @@ export function getNotes(params) {
    */
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/savednotes`;
+      const url = `${ROOT_URL}/histories`;
       console.log(`GET: ${url}`);
-      axios.get(url, { params })
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.get(url, { params, headers })
         .then((resp) => {
           const { response } = resp.data;
           dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
@@ -45,17 +47,16 @@ export function getNotes(params) {
   };
 }
 
-export function createNote(note, history) {
+export function createNote(note, recipeId) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/savednotes`;
+      const url = `${ROOT_URL}/history/${recipeId}`;
       console.log(`POST: ${url}`);
-      axios.post(url, note)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.post(url, note, { headers })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_NOTES, payload: response });
           resolve(response);
-          history.push('/savednotes');
         })
         .catch((error) => {
           dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -65,15 +66,15 @@ export function createNote(note, history) {
   };
 }
 
-export function updateNote(note) {
+export function updateNote(note, recipeId) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/savednotes/${note.id}?`;
+      const url = `${ROOT_URL}/history/${recipeId}`;
       console.log(`UPDATE: ${url}`);
-      axios.put(url, note)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      axios.put(url, note, { headers })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
           resolve(response);
         })
         .catch((error) => {
@@ -84,22 +85,30 @@ export function updateNote(note) {
   };
 }
 
-export function deleteNote(id, history) {
+export function deleteNote(recipeId, date) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      const url = `${ROOT_URL}/savednotes/${id}`;
+      const url = `${ROOT_URL}/history/${recipeId}`;
       console.log(`DELETE: ${url}`);
-      axios.delete(url)
+      const headers = { Authorization: `JWT ${localStorage.getItem('token')}` };
+      const data = {
+        DateOfEntry: date,
+      };
+      axios.delete(url, { data, headers })
         .then((resp) => {
           const { response } = resp.data;
-          dispatch({ type: ActionTypes.FETCH_NOTE, payload: response });
           resolve(response);
-          history.push('/savednotes');
         })
         .catch((error) => {
           dispatch({ type: ActionTypes.ERROR_SET, error });
           reject(error);
         });
     });
+  };
+}
+
+export function resetNotes() {
+  return {
+    type: ActionTypes.RESET_NOTE,
   };
 }

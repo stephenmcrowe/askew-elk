@@ -1,13 +1,13 @@
-# cs61-lab3
+# Chef's Kiss
 
- * Stephen Crowe, James Tanner, Shikhar Sinha, Xiaoyi Wu
+ * Team askew-elk: Stephen Crowe, James Tanner, Shikhar Sinha, Xiaoyi Wu
  * Prof. Pierson
  * CS61: Databases
  * 29 May 2020
 
-Short description
+Chef’s Kiss is your one-stop recipe shop! You can browse recipes when you’re looking to make something new, and you can also upload and save your own personal recipes to keep everything in one place.
 
-Pictures
+![screenshot](data/browse_screenshot.png)
 
 ## Dev Setup
 
